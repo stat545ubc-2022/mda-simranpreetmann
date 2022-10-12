@@ -107,7 +107,7 @@ glimpse(cancer_sample, 5)
 ```
 
 **The code below explores the attributes of the <span style ="color: blue;">*vancouver_trees*</span> dataset.**
-Based on the results below, the vancouver_trees dataset is a tibble with 70,063 rows and 22 columns. These columns (variables) are of the following types: character, double-precision floating point number & date.
+Based on the results below, the vancouver_trees dataset is a tibble with 146,611 rows and 22 columns. These columns (variables) are of the following types: character, double-precision floating point number & date.
 ```{r}
 class(vancouver_trees)
 dim(vancouver_trees)
@@ -265,15 +265,18 @@ vancouver_trees%>%
 
 #### **<span style ="color: deeppink;">Exercise 4: Make a new tibble with a subset of your data, with variables and observations that you are interested in exploring</span>**
 
-For this exercise, I will create a new tibble, which will contain a subset of my data, more specifically the variables that I consider to be potentially relevant for my 4 research questions. Lastly, I will print the tibble to ensure that it has the correct number of columns and was subsetted correctly!
+The vancouver_trees dataset contains a variable named *height_range_ID*. This variable is stored as a numeric variable; however, in reality, it represents different categories into which the trees are placed. For example, a height_range_id of 5 means that the height of the tree is anywhere from 50-60 feet. On the lower end, a height_range_id of 0 means that the height of the tree is anywhere from 0-10 feet. On the other extreme, a height_range_id of 10 means that the height of the tree is greater than 100 feet. As a result, I will be converting this numerical variable into a factor with the levels being 0-10, 10-20, 20-30, and so on. At the end, I use the levels() function to ensure that this worked!
+
+This will result in the creation of the vancouver_trees_height_factor dataset, which is a modified form of vancouver_trees. It has all blank values replaced with NA, and a new column has been created called 'height' which is a factor with the levels previously described.
+
 ```{r}
-irrelevant_variables <- c("tree_id","civic_number","assigned","longitude","latitude")
-
-vancouver_trees_data <- vancouver_trees %>%
-  select(everything(),-irrelevant_variables)
-
-print(vancouver_trees_data)
+vancouver_trees <- vancouver_trees %>%
+  mutate('height' = as.factor(height_range_id))
+height_factors <- c('0' = "0-10", '1' = "10-20", '2' = "20-30", '3' = "30-40", '4' = "40-50", '5' = "50-60", '6' = "60-70", '7' = "70-80", '8' = "80-90", '9' = "90-100", '10' = "Above 100")
+vancouver_trees$height <- recode_factor(vancouver_trees$height, !!!height_factors, .ordered = TRUE)
+levels(vancouver_trees$height)
 ```
+
 <!----------------------------------------------------------------------------->
 # Task 3: Write your research questions (5 points)
 
@@ -318,57 +321,57 @@ Make sure it's clear what research question you are doing each operation for!
 <!------------------------- Start your work below ----------------------------->
 ## **<span style ="color: purple;">Processing and Summarizing Data</span>**
 
-### **Research Question # 1: What is the most common diameter for trees in Vancouver?**
-####**Summarizing Task**
+### **<span style ="color: deeppink;">Research Question # 1: What is the most common diameter for trees in Vancouver?</span>**
+#### **<span style ="color: orange;">Summarizing Task</span>**
 For this section, I have chosen summarizing task # 1, as described above. The numerical variable I will be using will be the *diameter* of the trees at breast height (in). I will be calculating its range, mean, standard deviation, and interquartile range for each genus of trees. 
 ```{r}
-vancouver_trees_data %>%
+vancouver_trees %>%
   group_by(genus_name) %>%
   summarize(range_diameter = max(diameter)-min(diameter), mean_diameter = mean(diameter), sd_diameter = sd(diameter), IQR_diameter = IQR(diameter))
 ```
-#### **Graphing Task**
+#### **<span style ="color: orange;">Graphing Task</span>**
 For this task, I have plotted the distribution of the diameter (inches) of trees in Vancouver on a histogram with 'Diameter of Tree at Breast Height (in)' on the x-axis and 'Count' on the y-axis. This graph was created to satisfy the requirements of graphing task #8. As such, 3 histograms with different bin widths are shown below. For the first histogram, the bin width was set to be 100, followed by a bin width of 5 for the second histogram. The bin width of the last histogram was chosen using the Freedman-Diaconis rule, which advises on the optimal bin width for a given graph based on the interquartile range and the number of observations through an equation. In my opinion, the second histogram has the best bin width. This is because the bins aren't too big that all observations fall into one bin (this is the case with the first histogram), and the bins aren't too small either which would make it difficult to distinguish between the different bins (this is the case with the third histogram). Simply by looking at the second histogram, we can tell that most values for the diameter of trees in Vancouver fall between 5-20 inches.
 ```{r}
-vancouver_trees_data %>%
+vancouver_trees %>%
   ggplot(mapping = aes(diameter)) +
   geom_histogram(binwidth = 100, color="chartreuse4", fill = "chartreuse4") +
   labs(x = "Diameter of Tree at Breast Height (in)", y = "Count") +
   theme_classic()
 ```
 ```{r}
-vancouver_trees_data %>%
+vancouver_trees %>%
   ggplot(mapping = aes(diameter)) +
   geom_histogram(binwidth=5, color="chartreuse4", fill = "chartreuse4") +
   labs(x = "Diameter of Tree at Breast Height (in)", y = "Count") +
   theme_classic()
 ```
 ```{r}
-optimal_bin_width <- ((IQR(vancouver_trees_data$diameter))*2)/(length(vancouver_trees_data$diameter)^(1/3))
+optimal_bin_width <- ((IQR(vancouver_trees$diameter))*2)/(length(vancouver_trees$diameter)^(1/3))
 
-vancouver_trees_data %>%
+vancouver_trees %>%
   ggplot(mapping = aes(diameter)) +
   geom_histogram(binwidth=optimal_bin_width, color="chartreuse4", fill = "chartreuse4") +
   labs(x = "Diameter of Tree at Breast Height (in)", y = "Count") +
   theme_classic()
 ```
 
-### **Research Question # 2: Which genus of trees in Vancouver has the greatest diameter?**
-#### **Summarizing Task:**
+### **<span style ="color: deeppink;">Research Question # 2: Which genus of trees in Vancouver has the greatest diameter?</span>**
+#### **<span style ="color: orange;">Summarizing Task:</span>**
 For this research question, I have chosen summarizing task # 2. As per the instructions, I have computed the number of observations (rows) for the categorical variable *genus_name* below. I have sliced the dataset to keep only the top 5 most prevalent genera in Vancouver. The reasoning for this will become apparent in the corresponding graphing task.
 ```{r}
-vancouver_trees_data_top5 <- vancouver_trees_data %>%
+vancouver_trees_top5 <- vancouver_trees %>%
   group_by(genus_name) %>%
   summarise(n=n()) %>%
   arrange(desc(n)) %>%
   slice(1:5)
 
-print(vancouver_trees_data_top5)
+print(vancouver_trees_top5)
 ```
-#### **Graphing Task:**
+#### **<span style ="color: orange;">Graphing Task:</span>**
 I will be completing graphing task # 7, which requires the use of alpha transparency. Below, I have created a density plot which shows the distribution of the numeric variable *diameter* according to *genus_name*. Given that this dataset has a wide array of genera, I will be looking only at the top 5 genera of trees that are most prevalent in Vancouver. Additionally, based on previous analyses, I know that the range of *diameter* is quite long. Due to this, I will limit the range of my x-axis to 0-50 feet.
 ```{r}
-vancouver_trees_data %>%
-  filter(genus_name %in% vancouver_trees_data_top5$genus_name) %>%
+vancouver_trees %>%
+  filter(genus_name %in% vancouver_trees_top5$genus_name) %>%
   ggplot(mapping = aes(x = diameter, group = genus_name, fill = genus_name)) +
   geom_density(alpha=0.5) +
   labs(x = "Diameter of Tree at Breast Height (in)", y = "Density") +
@@ -377,15 +380,15 @@ vancouver_trees_data %>%
 ```
 
 
-### **Research Question # 3: Is there a linear relationship between the height and diameter of trees?**
-#### **Summarizing Task**
+### **<span style ="color: deeppink;">Research Question # 3: Is there a linear relationship between the height and diameter of trees?</span>**
+#### **<span style ="color: orange;">Summarizing Task</span>**
 For this question, I have chosen summarizing task # 1, as described above. Previously, I have calculated the range, mean, interquartile range, and standard deviation of the diameter of trees belonging to a given genus. However, I have not calculated this statistical information for the height these trees. Below, I will calculate the mean and range for height, alongside the standard deviation and interquartile range, in order to be able to adequately compare height and diameter in answering my research question.
 ```{r}
-vancouver_trees_data %>%
+vancouver_trees %>%
   group_by(genus_name) %>%
   summarize(range_height_range_id = max(height_range_id)-min(height_range_id), mean_height_range_id = mean(height_range_id), sd_height_range_id = sd(height_range_id), IQR_height_range_id = IQR(height_range_id))
 ```
-#### **Graphing Task**
+#### **<span style ="color: orange;">Graphing Task</span>**
 For the graphing task for research question # 3, I will be completing task # 5. In this task, I will be 
 ```{r}
 ggplot(vancouver_trees, aes(x=diameter, y=height_range_id)) +
@@ -394,19 +397,28 @@ geom_point(size = 0.009, color="black") +
   labs(x = "Diameter of Tree at Breast Height (in)", y = "Height Range (0-10)")+
   theme_linedraw()
 ```
-### **Research Question # 4: Which neighborhood in Vancouver has the greatest biodiversity?**
-#### **Summarizing Task:**
+
+### **<span style ="color: deeppink;">Research Question # 4: Which neighborhood in Vancouver has the greatest biodiversity?</span>**
+
+#### **<span style ="color: orange;">Summarizing Task:</span>**
 For this task, I have decided to complete summarizing task # 2. As such, I have computed the number of observations for the categorical variable *neighborhood_name* below!
 
 ```{r}
-vancouver_trees_data_neighborhood <- vancouver_trees_data %>%
+vancouver_trees_data_neighborhood <- vancouver_trees %>%
+  group_by(neighbourhood_name) %>%
+  summarize(n=n())
+print(vancouver_trees_data_neighborhood)
+```
+
+```{r}
+vancouver_trees_data_neighborhood <- vancouver_trees%>%
   group_by(neighbourhood_name) %>%
   filter(neighbourhood_name %in% vancouver_trees_data_neighborhood$neighbourhood_name) %>%
   summarise(n=n(), n_species = n_distinct(species_name))
 
 print(vancouver_trees_data_neighborhood)
 ```
-#### **Graphing Task:**
+#### **<span style ="color: orange;">Graphing Task:</span>**
 For this graphing task, I have chosen to complete task # 5. As per the instructions, I have plotted two geom layers (geom_col and geom_line) on the same plot. The line graph represents the # of distinct species of trees in each given neighborhood. This will aid me in answering my research question, because the amount of biodiversity in a particular neighborhood is dependent on the total number of trees as well as the total number of distinct tree species.
 ```{r}
 vancouver_trees_data_neighborhood %>%

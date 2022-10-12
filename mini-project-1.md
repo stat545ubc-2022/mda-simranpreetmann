@@ -228,7 +228,7 @@ glimpse(cancer_sample, 5)
 
 **The code below explores the attributes of the <span
 style="color: blue;">*vancouver_trees*</span> dataset.** Based on the
-results below, the vancouver_trees dataset is a tibble with 70,063 rows
+results below, the vancouver_trees dataset is a tibble with 146,611 rows
 and 22 columns. These columns (variables) are of the following types:
 character, double-precision floating point number & date.
 
@@ -665,46 +665,32 @@ vancouver_trees%>%
 
 #### **<span style="color: deeppink;">Exercise 4: Make a new tibble with a subset of your data, with variables and observations that you are interested in exploring</span>**
 
-For this exercise, I will create a new tibble, which will contain a
-subset of my data, more specifically the variables that I consider to be
-potentially relevant for my 4 research questions. Lastly, I will print
-the tibble to ensure that it has the correct number of columns and was
-subsetted correctly!
+The vancouver_trees dataset contains a variable named *height_range_ID*.
+This variable is stored as a numeric variable; however, in reality, it
+represents different categories into which the trees are placed. For
+example, a height_range_id of 5 means that the height of the tree is
+anywhere from 50-60 feet. On the lower end, a height_range_id of 0 means
+that the height of the tree is anywhere from 0-10 feet. On the other
+extreme, a height_range_id of 10 means that the height of the tree is
+greater than 100 feet. As a result, I will be converting this numerical
+variable into a factor with the levels being 0-10, 10-20, 20-30, and so
+on. At the end, I use the levels() function to ensure that this worked!
+
+This will result in the creation of the vancouver_trees_height_factor
+dataset, which is a modified form of vancouver_trees. It has all blank
+values replaced with NA, and a new column has been created called
+‘height’ which is a factor with the levels previously described.
 
 ``` r
-irrelevant_variables <- c("tree_id","civic_number","assigned","longitude","latitude")
-
-vancouver_trees_data <- vancouver_trees %>%
-  select(everything(),-irrelevant_variables)
+vancouver_trees <- vancouver_trees %>%
+  mutate('height' = as.factor(height_range_id))
+height_factors <- c('0' = "0-10", '1' = "10-20", '2' = "20-30", '3' = "30-40", '4' = "40-50", '5' = "50-60", '6' = "60-70", '7' = "70-80", '8' = "80-90", '9' = "90-100", '10' = "Above 100")
+vancouver_trees$height <- recode_factor(vancouver_trees$height, !!!height_factors, .ordered = TRUE)
+levels(vancouver_trees$height)
 ```
 
-    ## Note: Using an external vector in selections is ambiguous.
-    ## ℹ Use `all_of(irrelevant_variables)` instead of `irrelevant_variables` to silence this message.
-    ## ℹ See <https://tidyselect.r-lib.org/reference/faq-external-vector.html>.
-    ## This message is displayed once per session.
-
-``` r
-print(vancouver_trees_data)
-```
-
-    ## # A tibble: 70,063 × 17
-    ##    std_street    genus…¹ speci…² culti…³ commo…⁴ root_…⁵ plant…⁶ on_st…⁷ on_st…⁸
-    ##    <chr>         <chr>   <chr>   <chr>   <chr>   <chr>   <chr>     <dbl> <chr>  
-    ##  1 W 32ND AV     TILIA   CORDATA <NA>    LITTLE… N       4          2100 W 32ND…
-    ##  2 W 32ND AV     TILIA   CORDATA <NA>    LITTLE… N       4          2100 W 32ND…
-    ##  3 W 30TH AV     PRUNUS  CERASI… ATROPU… PISSAR… N       12         3600 W 30TH…
-    ##  4 W 30TH AV     PRUNUS  CERASI… ATROPU… PISSAR… N       12         3700 W 30TH…
-    ##  5 W 30TH AV     PRUNUS  CERASI… ATROPU… PISSAR… N       12         3700 W 30TH…
-    ##  6 HIGHBURY ST   PRUNUS  CERASI… ATROPU… PISSAR… N       12         3700 W 13TH…
-    ##  7 W 41ST AV     PRUNUS  SERRUL… KWANZAN KWANZA… N       G          5700 YEW ST 
-    ##  8 BOUNDARY ROAD ACER    RUBRUM  RED SU… RED SU… N       6          5000 BOUNDA…
-    ##  9 BOUNDARY ROAD ACER    RUBRUM  RED SU… RED SU… N       6          5000 BOUNDA…
-    ## 10 BOUNDARY ROAD ACER    RUBRUM  RED SU… RED SU… N       6          5000 BOUNDA…
-    ## # … with 70,053 more rows, 8 more variables: neighbourhood_name <chr>,
-    ## #   street_side_name <chr>, height_range_id <dbl>, diameter <dbl>, curb <chr>,
-    ## #   date_planted <date>, year_planted <dbl>, year <chr>, and abbreviated
-    ## #   variable names ¹​genus_name, ²​species_name, ³​cultivar_name, ⁴​common_name,
-    ## #   ⁵​root_barrier, ⁶​plant_area, ⁷​on_street_block, ⁸​on_street
+    ##  [1] "0-10"      "10-20"     "20-30"     "30-40"     "40-50"     "50-60"    
+    ##  [7] "60-70"     "70-80"     "80-90"     "90-100"    "Above 100"
 
 <!----------------------------------------------------------------------------->
 
@@ -782,16 +768,17 @@ for!
 
 ## **<span style="color: purple;">Processing and Summarizing Data</span>**
 
-### **Research Question \# 1: What is the most common diameter for trees in Vancouver?**
+### **<span style="color: deeppink;">Research Question \# 1: What is the most common diameter for trees in Vancouver?</span>**
 
-\####**Summarizing Task** For this section, I have chosen summarizing
-task \# 1, as described above. The numerical variable I will be using
-will be the *diameter* of the trees at breast height (in). I will be
-calculating its range, mean, standard deviation, and interquartile range
-for each genus of trees.
+#### **<span style="color: orange;">Summarizing Task</span>**
+
+For this section, I have chosen summarizing task \# 1, as described
+above. The numerical variable I will be using will be the *diameter* of
+the trees at breast height (in). I will be calculating its range, mean,
+standard deviation, and interquartile range for each genus of trees.
 
 ``` r
-vancouver_trees_data %>%
+vancouver_trees %>%
   group_by(genus_name) %>%
   summarize(range_diameter = max(diameter)-min(diameter), mean_diameter = mean(diameter), sd_diameter = sd(diameter), IQR_diameter = IQR(diameter))
 ```
@@ -811,7 +798,7 @@ vancouver_trees_data %>%
     ## 10 CASTANEA              11            5.2         4.92         0   
     ## # … with 69 more rows
 
-#### **Graphing Task**
+#### **<span style="color: orange;">Graphing Task</span>**
 
 For this task, I have plotted the distribution of the diameter (inches)
 of trees in Vancouver on a histogram with ‘Diameter of Tree at Breast
@@ -832,7 +819,7 @@ can tell that most values for the diameter of trees in Vancouver fall
 between 5-20 inches.
 
 ``` r
-vancouver_trees_data %>%
+vancouver_trees %>%
   ggplot(mapping = aes(diameter)) +
   geom_histogram(binwidth = 100, color="chartreuse4", fill = "chartreuse4") +
   labs(x = "Diameter of Tree at Breast Height (in)", y = "Count") +
@@ -842,7 +829,7 @@ vancouver_trees_data %>%
 ![](mini-project-1_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
 
 ``` r
-vancouver_trees_data %>%
+vancouver_trees %>%
   ggplot(mapping = aes(diameter)) +
   geom_histogram(binwidth=5, color="chartreuse4", fill = "chartreuse4") +
   labs(x = "Diameter of Tree at Breast Height (in)", y = "Count") +
@@ -852,9 +839,9 @@ vancouver_trees_data %>%
 ![](mini-project-1_files/figure-gfm/unnamed-chunk-16-1.png)<!-- -->
 
 ``` r
-optimal_bin_width <- ((IQR(vancouver_trees_data$diameter))*2)/(length(vancouver_trees_data$diameter)^(1/3))
+optimal_bin_width <- ((IQR(vancouver_trees$diameter))*2)/(length(vancouver_trees$diameter)^(1/3))
 
-vancouver_trees_data %>%
+vancouver_trees %>%
   ggplot(mapping = aes(diameter)) +
   geom_histogram(binwidth=optimal_bin_width, color="chartreuse4", fill = "chartreuse4") +
   labs(x = "Diameter of Tree at Breast Height (in)", y = "Count") +
@@ -863,9 +850,9 @@ vancouver_trees_data %>%
 
 ![](mini-project-1_files/figure-gfm/unnamed-chunk-17-1.png)<!-- -->
 
-### **Research Question \# 2: Which genus of trees in Vancouver has the greatest diameter?**
+### **<span style="color: deeppink;">Research Question \# 2: Which genus of trees in Vancouver has the greatest diameter?</span>**
 
-#### **Summarizing Task:**
+#### **<span style="color: orange;">Summarizing Task:</span>**
 
 For this research question, I have chosen summarizing task \# 2. As per
 the instructions, I have computed the number of observations (rows) for
@@ -874,13 +861,13 @@ to keep only the top 5 most prevalent genera in Vancouver. The reasoning
 for this will become apparent in the corresponding graphing task.
 
 ``` r
-vancouver_trees_data_top5 <- vancouver_trees_data %>%
+vancouver_trees_top5 <- vancouver_trees %>%
   group_by(genus_name) %>%
   summarise(n=n()) %>%
   arrange(desc(n)) %>%
   slice(1:5)
 
-print(vancouver_trees_data_top5)
+print(vancouver_trees_top5)
 ```
 
     ## # A tibble: 5 × 2
@@ -892,7 +879,7 @@ print(vancouver_trees_data_top5)
     ## 4 CARPINUS    3812
     ## 5 FAGUS       3400
 
-#### **Graphing Task:**
+#### **<span style="color: orange;">Graphing Task:</span>**
 
 I will be completing graphing task \# 7, which requires the use of alpha
 transparency. Below, I have created a density plot which shows the
@@ -904,8 +891,8 @@ range of *diameter* is quite long. Due to this, I will limit the range
 of my x-axis to 0-50 feet.
 
 ``` r
-vancouver_trees_data %>%
-  filter(genus_name %in% vancouver_trees_data_top5$genus_name) %>%
+vancouver_trees %>%
+  filter(genus_name %in% vancouver_trees_top5$genus_name) %>%
   ggplot(mapping = aes(x = diameter, group = genus_name, fill = genus_name)) +
   geom_density(alpha=0.5) +
   labs(x = "Diameter of Tree at Breast Height (in)", y = "Density") +
@@ -917,9 +904,9 @@ vancouver_trees_data %>%
 
 ![](mini-project-1_files/figure-gfm/unnamed-chunk-19-1.png)<!-- -->
 
-### **Research Question \# 3: Is there a linear relationship between the height and diameter of trees?**
+### **<span style="color: deeppink;">Research Question \# 3: Is there a linear relationship between the height and diameter of trees?</span>**
 
-#### **Summarizing Task**
+#### **<span style="color: orange;">Summarizing Task</span>**
 
 For this question, I have chosen summarizing task \# 1, as described
 above. Previously, I have calculated the range, mean, interquartile
@@ -931,7 +918,7 @@ order to be able to adequately compare height and diameter in answering
 my research question.
 
 ``` r
-vancouver_trees_data %>%
+vancouver_trees %>%
   group_by(genus_name) %>%
   summarize(range_height_range_id = max(height_range_id)-min(height_range_id), mean_height_range_id = mean(height_range_id), sd_height_range_id = sd(height_range_id), IQR_height_range_id = IQR(height_range_id))
 ```
@@ -952,7 +939,7 @@ vancouver_trees_data %>%
     ## # … with 69 more rows, and abbreviated variable names ¹​sd_height_range_id,
     ## #   ²​IQR_height_range_id
 
-#### **Graphing Task**
+#### **<span style="color: orange;">Graphing Task</span>**
 
 For the graphing task for research question \# 3, I will be completing
 task \# 5. In this task, I will be
@@ -967,33 +954,63 @@ geom_point(size = 0.009, color="black") +
 
     ## `geom_smooth()` using method = 'gam' and formula 'y ~ s(x, bs = "cs")'
 
-![](mini-project-1_files/figure-gfm/unnamed-chunk-21-1.png)<!-- --> \###
-**Research Question \# 4: Which neighborhood in Vancouver has the
-greatest biodiversity?** \#### **Summarizing Task:** For this task, I
-have decided to complete summarizing task \# 2. As such, I have computed
-the number of observations for the categorical variable
-*neighborhood_name* below!
+![](mini-project-1_files/figure-gfm/unnamed-chunk-21-1.png)<!-- -->
+
+### **<span style="color: deeppink;">Research Question \# 4: Which neighborhood in Vancouver has the greatest biodiversity?</span>**
+
+#### **<span style="color: orange;">Summarizing Task:</span>**
+
+For this task, I have decided to complete summarizing task \# 2. As
+such, I have computed the number of observations for the categorical
+variable *neighborhood_name* below!
 
 ``` r
-vancouver_trees_data_neighborhood <- vancouver_trees_data %>%
+vancouver_trees_data_neighborhood <- vancouver_trees %>%
   group_by(neighbourhood_name) %>%
-  filter(neighbourhood_name %in% vancouver_trees_data_neighborhood$neighbourhood_name) %>%
-  summarise(n=n(), n_species = n_distinct(species_name))
-```
-
-    ## Error in `filter()`:
-    ## ! Problem while computing `..1 = neighbourhood_name %in% ...`.
-    ## ℹ The error occurred in group 1: neighbourhood_name = "ARBUTUS-RIDGE".
-    ## Caused by error in `neighbourhood_name %in% vancouver_trees_data_neighborhood$neighbourhood_name`:
-    ## ! object 'vancouver_trees_data_neighborhood' not found
-
-``` r
+  summarize(n=n())
 print(vancouver_trees_data_neighborhood)
 ```
 
-    ## Error in print(vancouver_trees_data_neighborhood): object 'vancouver_trees_data_neighborhood' not found
+    ## # A tibble: 22 × 2
+    ##    neighbourhood_name           n
+    ##    <chr>                    <int>
+    ##  1 ARBUTUS-RIDGE             2654
+    ##  2 DOWNTOWN                  2250
+    ##  3 DUNBAR-SOUTHLANDS         3773
+    ##  4 FAIRVIEW                  1414
+    ##  5 GRANDVIEW-WOODLAND        3094
+    ##  6 HASTINGS-SUNRISE          6075
+    ##  7 KENSINGTON-CEDAR COTTAGE  5844
+    ##  8 KERRISDALE                3011
+    ##  9 KILLARNEY                 2927
+    ## 10 KITSILANO                 2564
+    ## # … with 12 more rows
 
-#### **Graphing Task:**
+``` r
+vancouver_trees_data_neighborhood <- vancouver_trees%>%
+  group_by(neighbourhood_name) %>%
+  filter(neighbourhood_name %in% vancouver_trees_data_neighborhood$neighbourhood_name) %>%
+  summarise(n=n(), n_species = n_distinct(species_name))
+
+print(vancouver_trees_data_neighborhood)
+```
+
+    ## # A tibble: 22 × 3
+    ##    neighbourhood_name           n n_species
+    ##    <chr>                    <int>     <int>
+    ##  1 ARBUTUS-RIDGE             2654        91
+    ##  2 DOWNTOWN                  2250        57
+    ##  3 DUNBAR-SOUTHLANDS         3773       109
+    ##  4 FAIRVIEW                  1414        65
+    ##  5 GRANDVIEW-WOODLAND        3094       102
+    ##  6 HASTINGS-SUNRISE          6075       122
+    ##  7 KENSINGTON-CEDAR COTTAGE  5844       120
+    ##  8 KERRISDALE                3011        90
+    ##  9 KILLARNEY                 2927        75
+    ## 10 KITSILANO                 2564        95
+    ## # … with 12 more rows
+
+#### **<span style="color: orange;">Graphing Task:</span>**
 
 For this graphing task, I have chosen to complete task \# 5. As per the
 instructions, I have plotted two geom layers (geom_col and geom_line) on
@@ -1013,7 +1030,7 @@ vancouver_trees_data_neighborhood %>%
   theme(axis.text.x = element_text(size=6))
 ```
 
-    ## Error in ggplot(., aes(x = neighbourhood_name, group = 1)): object 'vancouver_trees_data_neighborhood' not found
+![](mini-project-1_files/figure-gfm/unnamed-chunk-24-1.png)<!-- -->
 
 <!----------------------------------------------------------------------------->
 
