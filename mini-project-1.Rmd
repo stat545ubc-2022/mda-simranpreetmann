@@ -1,6 +1,6 @@
 ---
 title: "Mini Data-Analysis Deliverable 1"
-output: html_document
+output: github_document
 ---
 
 # Welcome to your (maybe) first-ever data analysis project!
@@ -314,15 +314,15 @@ Make sure it's clear what research question you are doing each operation for!
 <!------------------------- Start your work below ----------------------------->
 ## **<span style ="color: purple;">Processing and Summarizing Data</span>**
 
-##### **Research Question # 1: What is the most common diameter for trees in Vancouver?**
-###### Summarizing Task 
+### **Research Question # 1: What is the most common diameter for trees in Vancouver?**
+####**Summarizing Task**
 For this section, I have chosen summarizing task # 1, as described above. The numerical variable I will be using will be the *diameter* of the trees at breast height (in). I will be calculating its range, mean, standard deviation, and interquartile range for each genus of trees. 
 ```{r}
 vancouver_trees_data %>%
   group_by(genus_name) %>%
   summarize(range_diameter = max(diameter)-min(diameter), mean_diameter = mean(diameter), sd_diameter = sd(diameter), IQR_diameter = IQR(diameter))
 ```
-###### Graphing Task 
+#### **Graphing Task**
 For this task, I have plotted the distribution of the diameter (inches) of trees in Vancouver on a histogram with 'Diameter of Tree at Breast Height (in)' on the x-axis and 'Count' on the y-axis. This graph was created to satisfy the requirements of graphing task #8. As such, 3 histograms with different bin widths are shown below. For the first histogram, the bin width was set to be 100, followed by a bin width of 5 for the second histogram. The bin width of the last histogram was chosen using the Freedman-Diaconis rule, which advises on the optimal bin width for a given graph based on the interquartile range and the number of observations through an equation. In my opinion, the second histogram has the best bin width. This is because the bins aren't too big that all observations fall into one bin (this is the case with the first histogram), and the bins aren't too small either which would make it difficult to distinguish between the different bins (this is the case with the third histogram). Simply by looking at the second histogram, we can tell that most values for the diameter of trees in Vancouver fall between 5-20 inches.
 ```{r}
 vancouver_trees_data %>%
@@ -348,8 +348,8 @@ vancouver_trees_data %>%
   theme_classic()
 ```
 
-##### **Research Question # 2: Which genus of trees in Vancouver has the greatest diameter?**
-###### Summarizing Task:
+### **Research Question # 2: Which genus of trees in Vancouver has the greatest diameter?**
+#### **Summarizing Task:**
 For this research question, I have chosen summarizing task # 2. As per the instructions, I have computed the number of observations (rows) for the categorical variable *genus_name* below. I have sliced the dataset to keep only the top 5 most prevalent genera in Vancouver. The reasoning for this will become apparent in the corresponding graphing task.
 ```{r}
 vancouver_trees_data_top5 <- vancouver_trees_data %>%
@@ -360,7 +360,7 @@ vancouver_trees_data_top5 <- vancouver_trees_data %>%
 
 print(vancouver_trees_data_top5)
 ```
-###### Graphing Task:
+#### **Graphing Task:**
 I will be completing graphing task # 7, which requires the use of alpha transparency. Below, I have created a density plot which shows the distribution of the numeric variable *diameter* according to *genus_name*. Given that this dataset has a wide array of genera, I will be looking only at the top 5 genera of trees that are most prevalent in Vancouver. Additionally, based on previous analyses, I know that the range of *diameter* is quite long. Due to this, I will limit the range of my x-axis to 0-50 feet.
 ```{r}
 vancouver_trees_data %>%
@@ -373,15 +373,15 @@ vancouver_trees_data %>%
 ```
 
 
-##### *Research Question # 3: Is there a linear relationship between the height and diameter of trees?*
-###### Summarizing Task
+### **Research Question # 3: Is there a linear relationship between the height and diameter of trees?**
+#### **Summarizing Task**
 For this question, I have chosen summarizing task # 1, as described above. Previously, I have calculated the range, mean, interquartile range, and standard deviation of the diameter of trees belonging to a given genus. However, I have not calculated this statistical information for the height these trees. Below, I will calculate the mean and range for height, alongside the standard deviation and interquartile range, in order to be able to adequately compare height and diameter in answering my research question.
 ```{r}
 vancouver_trees_data %>%
   group_by(genus_name) %>%
   summarize(range_height_range_id = max(height_range_id)-min(height_range_id), mean_height_range_id = mean(height_range_id), sd_height_range_id = sd(height_range_id), IQR_height_range_id = IQR(height_range_id))
 ```
-###### Graphing Task
+#### **Graphing Task**
 For the graphing task for research question # 3, I will be completing task # 5. In this task, I will be 
 ```{r}
 ggplot(vancouver_trees, aes(x=diameter, y=height_range_id)) +
@@ -390,14 +390,10 @@ geom_point(size = 0.009, color="black") +
   labs(x = "Diameter of Tree at Breast Height (in)", y = "Height Range (0-10)")+
   theme_linedraw()
 ```
-##### *Research Question # 4: Which neighborhood in Vancouver has the greatest biodiversity?
-```{r}
-vancouver_trees_data_neighborhood <- vancouver_trees_data %>%
-  group_by(neighbourhood_name) %>%
-  summarize(n=n())
+### **Research Question # 4: Which neighborhood in Vancouver has the greatest biodiversity?**
+#### **Summarizing Task:**
+For this task, I have decided to complete summarizing task # 2. As such, I have computed the number of observations for the categorical variable *neighborhood_name* below!
 
-print(vancouver_trees_data_neighborhood)
-```
 ```{r}
 vancouver_trees_data_neighborhood <- vancouver_trees_data %>%
   group_by(neighbourhood_name) %>%
@@ -406,6 +402,8 @@ vancouver_trees_data_neighborhood <- vancouver_trees_data %>%
 
 print(vancouver_trees_data_neighborhood)
 ```
+#### **Graphing Task:**
+For this graphing task, I have chosen to complete task # 5. As per the instructions, I have plotted two geom layers (geom_col and geom_line) on the same plot. The line graph represents the # of distinct species of trees in each given neighborhood. This will aid me in answering my research question, because the amount of biodiversity in a particular neighborhood is dependent on the total number of trees as well as the total number of distinct tree species.
 ```{r}
 vancouver_trees_data_neighborhood %>%
   ggplot(aes(x = neighbourhood_name, group = 1)) +
@@ -423,7 +421,9 @@ vancouver_trees_data_neighborhood %>%
 Based on the operations that you've completed, how much closer are you to answering your research questions? Think about what aspects of your research questions remain unclear. Can your research questions be refined, now that you've investigated your data a bit more? Which research questions are yielding interesting results?
 
 <!-------------------------- Start your work below ---------------------------->
+## **<span style ="color: purple;">Conclusion</span>**
 
+Based on the operations I have completed, I do believe that I'm significantly closer to answering my research questions. One aspect that does remain unclear, however, is the relationship between the height of a given tree and its diameter (as discussed in research question # 3). This is because the heights of the trees are given as a range from 0-10, with integers being the only possibility. As a result, some information in lost when storing data in this manner. For example, trees that would've had a height of 56 ft would be stored as 5, and those with a height of 32 feet would be stored as 3. This would influence the power and overall statistical significance of my results, making it much more difficult to view trends. This is particularly why I believe that the graph produced for this research question has such an interesting shape!
 <!----------------------------------------------------------------------------->
 
 ### Attribution
