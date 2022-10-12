@@ -189,7 +189,7 @@ First off, missing values in this dataset are indicated by blank cells. I will s
 ```{r}
 vancouver_trees <- vancouver_trees %>%
   na_if(y = "")
-summary(vancouver_trees_with_NA)
+summary(vancouver_trees)
 ```
 Next, I will count the number of NA's for each variable and plot this information on a bar plot, with the x-axis labeled 'Name of Variable' and the y-axis being labeled 'Number of Missing Values'.
 ```{r}
