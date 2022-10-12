@@ -79,12 +79,11 @@ And that is exactly the first thing that you will do!
 **Note**: We encourage you to use the ones in the `datateachr` package, but if you have a dataset that you'd really like to use, you can include it here. But, please check with a member of the teaching team to see whether the dataset is of appropriate complexity. Also, include a **brief** description of the dataset here to help the teaching team understand your data.
 
 <!-------------------------- Start your work below ---------------------------->
-#### *My 4 Potential DataSet Choices*
+## **<span style ="color: purple;">My 4 Potential DataSet Choices</span>**
 1. cancer_sample
 2. vancouver_trees
 3. steam_games
 4. parking_meters
-
 <!----------------------------------------------------------------------------->
 
 1.2 One way to narrowing down your selection is to *explore* the datasets. Use your knowledge of dplyr to find out at least *3* attributes about each of these datasets (an attribute is something such as number of rows, variables, class type...). The goal here is to have an idea of *what the data looks like*.
@@ -92,43 +91,39 @@ And that is exactly the first thing that you will do!
 *Hint:* This is one of those times when you should think about the cleanliness of your analysis. I added a single code chunk for you below, but do you want to use more than one? Would you like to write more comments outside of the code chunk?
 
 <!-------------------------- Start your work below ---------------------------->
-#### *Determining the attributes of my potential datasets*
+## **<span style ="color: purple;">Determining the attributes of my potential datasets</span>**
 The 4 code chunks below explore the attributes of my 4 potential datasets. The 4 attributes investigated are the following: class, number of observations (rows), number of variables (columns), names of all variables. To finish this exploration, the first 5 rows of each dataset will be displayed!
 
-**The code below explores the attributes of the <span style ="color: blue;">*cancer_sample*</span> dataset.**
+**The code below explores the attributes of the <span style ="color: blue;">*cancer_sample*</span> dataset.** 
+Based on the results below, the cancer_sample dataset is a tibble with 569 rows and 32 columns. These columns (variables) are of the following types: character & double-precision floating point number.
 ```{r}
 class(cancer_sample)
-nrow(cancer_sample)
-ncol(cancer_sample)
-names(cancer_sample)
-head(cancer_sample, 5)
+dim(cancer_sample)
+glimpse(cancer_sample, 5)
 ```
 
 **The code below explores the attributes of the <span style ="color: blue;">*vancouver_trees*</span> dataset.**
+Based on the results below, the vancouver_trees dataset is a tibble with 70,063 rows and 22 columns. These columns (variables) are of the following types: character, double-precision floating point number & date.
 ```{r}
 class(vancouver_trees)
-nrow(vancouver_trees)
-ncol(vancouver_trees)
-names(vancouver_trees)
-head(vancouver_trees, 5)
+dim(vancouver_trees)
+glimpse(vancouver_trees, 5)
 ```
 
 **The code below explores the attributes of the <span style ="color: blue;">*steam_games*</span> dataset.**
+Based on the results below, the vancouver_trees dataset is a tibble with 40,833 rows and 21 columns. These columns (variables) are of the following types: character & double-precision floating point number.
 ```{r}
 class(steam_games)
-nrow(steam_games)
-ncol(steam_games)
-names(steam_games)
-head(steam_games, 5)
+dim(steam_games)
+glimpse(steam_games, 5)
 ```
 
 **The code below explores the attributes of the <span style ="color: blue;">*parking_meters*</span> dataset.**
+Based on the results below, the vancouver_trees dataset is a tibble with 10032 rows and 22 columns. These columns (variables) are of the following types: character & double-precision floating point number.
 ```{r}
 class(parking_meters)
-nrow(parking_meters)
-ncol(parking_meters)
-names(parking_meters)
-head(parking_meters, 5)
+dim(parking_meters)
+glimpse(parking_meters, 5)
 ```
 
 <!----------------------------------------------------------------------------->
@@ -136,24 +131,24 @@ head(parking_meters, 5)
 1.3 Now that you've explored the 4 datasets that you were initially most interested in, let's narrow it down to 2. What lead you to choose these 2? Briefly explain your choices below, and feel free to include any code in your explanation.
 
 <!-------------------------- Start your work below ---------------------------->
-#### *Narrowing it down to 2 datasets*
+## **<span style ="color: purple;">Narrowing it down to 2 datasets</span>**
 
 After giving it much thought, I have narrowed my options down to the following 2 datasets:
 
-1. **cancer_sample:** I have chosen this dataset purely out of interest and relevance. I am a graduate student in the Department of Microbiology & Immunology and my supervisor's lab is based at BCCHR. As such, my graduate thesis project is heavily reliant on the ability to work with and manipulate healthcare data. For this reason, I believe that the cancer_sample dataset is most similar to the datasets I will be working on in the future, and, thus, a good dataset for me to 'get my feet wet'!
+1. **<span style ="color: blue;">cancer_sample:</span>** I have chosen this dataset purely out of interest and relevance. I am a graduate student in the Department of Microbiology & Immunology and my supervisor's lab is based at BCCHR. As such, my graduate thesis project is heavily reliant on the ability to work with and manipulate healthcare data. For this reason, I believe that the cancer_sample dataset is most similar to the datasets I will be working on in the future, and, thus, a good dataset for me to 'get my feet wet'!
 
-2. **vancouver_trees:** I chose this dataset because it has the greatest number of observations(rows) out of the 7 given datasets. Datasets with a large number of observations(rows) are generally preferred for statistical analysis because they usually have a higher statistical power and, thus, better predictive capabilities. I also find this dataset very interesting because it'll allow me to explore topics that I normally wouldn't have the time/opportunity to investigate.
+2. **<span style ="color: blue;">vancouver_trees:</span>** I chose this dataset because it has the greatest number of observations(rows) out of the 7 given datasets. Datasets with a large number of observations(rows) are generally preferred for statistical analysis because they usually have a higher statistical power and, thus, better predictive capabilities. I also find this dataset very interesting because it'll allow me to explore topics that I normally wouldn't have the time/opportunity to investigate.
 <!----------------------------------------------------------------------------->
 
 1.4 Time for the final decision! Going back to the beginning, it's important to have an *end goal* in mind. For example, if I had chosen the `titanic` dataset for my project, I might've wanted to explore the relationship between survival and other variables. Try to think of 1 research question that you would want to answer with each dataset. Note them down below, and make your final choice based on what seems more interesting to you!
 
 <!-------------------------- Start your work below ---------------------------->
-#### *Final Decision Regarding Which DataSet To Explore Further*
+## **<span style ="color: purple;">Final Decision Regarding Which DataSet To Explore Further</span>**
 
 In an attempt to decide on a dataset between the 2 listed previously, I have chosen 1 research question for each dataset. The research questions are as follows:
 
-1. **cancer_sample:** Do cell nuclei classified as malignant have a greater, smaller, or equal radius compared to those classified as benign?
-2. **vancouver_trees:** On average, during which month of the year are the most trees planted in Vancouver?
+1. **<span style ="color: blue;">cancer_sample:</span>** Do cell nuclei classified as malignant have a greater, smaller, or equal radius compared to those classified as benign?
+2. **<span style ="color: blue;">vancouver_trees:</span>** On average, during which month of the year are the most trees planted in Vancouver?
 
 <span style="color: limegreen;">**Based on the questions listed above, I have decided to explore the *vancouver_trees* dataset further.**</span>
 <!----------------------------------------------------------------------------->
@@ -182,21 +177,23 @@ If we rewind and go back to the learning objectives, you'll see that by the end 
 2.2 For each of the 4 exercises that you complete, provide a *brief explanation* of why you chose that exercise in relation to your data (in other words, why does it make sense to do that?), and sufficient comments for a reader to understand your reasoning and code.
 
 <!-------------------------- Start your work below ---------------------------->
-#### *Exploring the Dataset*
+## **<span style ="color: purple;">Exploring the Dataset</span>**
+
 In order to get a better understanding of this dataset, I have completed 4 different exercises below using *dplyr* and *ggplot*.
 
-##### *Exercise 1: Investigate the number of missing values per variable and plot it*
+### **<span style ="color: deeppink;">Exercise 1: Investigate the number of missing values per variable and plot it</span>**
+
 To begin this exploration of the *vancouver_trees* dataset, I will start by determining which variables have the greatest number of missing values. This will be helpful in future analyses, as it will allow me to interpret trends/patterns associated with these variables with caution.
 
-First off, missing values in this dataset are indicated by blank cells. I will start by converting these cells to NA in order to be able to count the number of NA's in th subsequent steps. I will also print a summary of the dataset to ensure that there are NA's present in the dataset following the aforementioned manipulations.
+First off, missing values in this dataset are indicated by blank cells. I will start by converting these cells to NA in order to be able to count the number of NA's in the subsequent steps. I will also print a summary of the dataset to ensure that there are NA's present in the dataset following the aforementioned manipulations.
 ```{r}
-vancouver_trees_with_NA <- vancouver_trees %>%
+vancouver_trees <- vancouver_trees %>%
   na_if(y = "")
 summary(vancouver_trees_with_NA)
 ```
 Next, I will count the number of NA's for each variable and plot this information on a bar plot, with the x-axis labeled 'Name of Variable' and the y-axis being labeled 'Number of Missing Values'.
 ```{r}
-count_NA <- vancouver_trees_with_NA %>%
+count_NA <- vancouver_trees %>%
   summarise(across(c(everything(),-tree_id,-civic_number), ~ sum(is.na(.))))
 
 count_NA_long <- count_NA %>%
@@ -204,17 +201,17 @@ count_NA_long <- count_NA %>%
 
 count_NA_long %>%
   ggplot(aes(x = name, y = value)) +
-  geom_col(color = "chartreuse4", fill = "chartreuse3") +
+  geom_col(color = "hotpink4", fill = "hotpink1") +
   labs(x = "Name of Variable", y = "Number of Missing Values") +
   scale_x_discrete(guide = guide_axis(angle = 90)) +
   theme_classic()
 ```
 
-##### *Exercise 2: Create a new variable based on other variables in your data (only if it makes sense)*
-For this section of my data analysis, I have have created a categorical variable (decade) from the existing numerical variable (date_planted).
+#### **<span style ="color: deeppink;">Exercise 2: Create a new variable based on other variables in your data (only if it makes sense)</span>**
+
+For this section of my data analysis, I will create a categorical variable (decade) from the existing numerical variable (date_planted).
 ```{r}
 vancouver_trees$year_planted <- as.numeric(format(vancouver_trees$date_planted,'%Y'))
-
 ```
 
 ```{r}
@@ -252,17 +249,19 @@ vancouver_trees<- bind_rows(vancouver_trees_data_1980s,vancouver_trees_data_1990
 print(vancouver_trees)
 ```
 
-##### *Exercise 3: Plot the distribution of a numeric variable*
+#### **<span style ="color: deeppink;">Exercise 3: Plot the distribution of a numeric variable</span>**
+
 For this exercise, I intend to plot the distribution of the *height_range_id* of trees in Vancouver. I have created a histogram which has 'Height Range of Tree (x10 ft)' on the x-axis and 'Count' on the y-axis.
 ```{r}
 vancouver_trees%>%
   ggplot(mapping = aes(height_range_id)) +
-  geom_bar(alpha=0.7, color="chartreuse4", fill = "chartreuse4") +
+  geom_bar(alpha=0.7, color="hotpink4", fill = "hotpink1") +
   labs(x = "Height Range of Tree (x10 ft)", y = "Count")
 ```
 
-##### *Exercise 4: Make a new tibble with a subset of your data, with variables and observations that you are interested in exploring*
-I have created many modified versions of the vancouver_trees dataset in the previous three exercises. Now, I will create a new tibble, which will contain a subset of my data, more specifically the variables that I consider to be potentially relevant for my 4 research questions. Lastly, I will print the tibble to ensure that it has the correct number of columns and was subsetted correctly!
+#### **<span style ="color: deeppink;">Exercise 4: Make a new tibble with a subset of your data, with variables and observations that you are interested in exploring</span>**
+
+For this exercise, I will create a new tibble, which will contain a subset of my data, more specifically the variables that I consider to be potentially relevant for my 4 research questions. Lastly, I will print the tibble to ensure that it has the correct number of columns and was subsetted correctly!
 ```{r}
 irrelevant_variables <- c("tree_id","civic_number","assigned","longitude","latitude")
 
@@ -277,15 +276,14 @@ print(vancouver_trees_data)
 So far, you have chosen a dataset and gotten familiar with it through exploring the data. Now it's time to figure out 4 research questions that you would like to answer with your data! Write the 4 questions and any additional comments at the end of this deliverable. These questions are not necessarily set in stone - TAs will review them and give you feedback; therefore, you may choose to pursue them as they are for the rest of the project, or make modifications!
 
 <!--- *****START HERE***** --->
-#### *My 4 Research Questions*
-My 4 potential research questions for the *vancouver_trees* dataset are as follows:
-1. Since the beginning of data collection, in which decade were the most trees planted in Vancouver? Additionally, how many of these had root barriers installed?
-2. Which species of trees is the most common in Vancouver?
-3. Which tree species in Vancouver has the greatest 
+## **<span style ="color: purple;">My 4 Research Questions</span>**
 
+My 4 potential research questions for the <span style ="color: blue;">*vancouver_trees*</span> dataset are as follows:
 
-
-
+1. What is the most common diameter for trees in Vancouver?
+2. Which genus of trees in Vancouver has the greatest diameter?
+3. Is there a linear relationship between the height and diameter of trees?
+4. Which neighborhood in Vancouver has the greatest biodiversity?
 
 # Task 4: Process and summarize your data (13 points)
 
@@ -314,7 +312,7 @@ Ensure that the output of each operation is printed!
 Make sure it's clear what research question you are doing each operation for!
 
 <!------------------------- Start your work below ----------------------------->
-#### *Processing and Summarizing Data*
+## **<span style ="color: purple;">Processing and Summarizing Data</span>**
 
 ##### **Research Question # 1: What is the most common diameter for trees in Vancouver?**
 ###### Summarizing Task 
