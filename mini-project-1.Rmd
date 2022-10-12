@@ -227,23 +227,23 @@ print(maximum_year)
 After extracting the year from the date, and determining the minimum and maximum values for year stored in this dataset, I can now decide on the factor levels which will be as follows: 1980s, 1990s, 2000s, 2010s, 2020s. I will now convert this numeric variable into a categorical variable below!
 
 ```{r}
-vancouver_trees_data_1980s <- vancouver_trees_data %>%
+vancouver_trees_data_1980s <- vancouver_trees %>%
   filter(1980<=year_planted, year_planted<1990) %>%
   mutate(year = '1980s')
 
-vancouver_trees_data_1990s <- vancouver_trees_data %>%
+vancouver_trees_data_1990s <- vancouver_trees %>%
   filter(1990<=year_planted, year_planted<2000) %>%
   mutate(year = '1990s')
 
-vancouver_trees_data_200s <- vancouver_trees_data %>%
+vancouver_trees_data_2000s <- vancouver_trees %>%
   filter(2000<=year_planted, year_planted<2010) %>%
   mutate(year = '2000s')
 
-vancouver_trees_data_2010s <- vancouver_trees_data %>%
+vancouver_trees_data_2010s <- vancouver_trees %>%
   filter(2010<=year_planted, year_planted<2020) %>%
   mutate(year = '2010s')
 
-vancouver_trees_data_2020s <- vancouver_trees_data %>%
+vancouver_trees_data_2020s <- vancouver_trees %>%
   filter(2020<=year_planted) %>%
   mutate(year = '2020s')
 
@@ -266,7 +266,7 @@ I have created many modified versions of the vancouver_trees dataset in the prev
 ```{r}
 irrelevant_variables <- c("tree_id","civic_number","assigned","longitude","latitude")
 
-vancouver_trees_data <- vancouver_trees_height_factor %>%
+vancouver_trees_data <- vancouver_trees %>%
   select(everything(),-irrelevant_variables)
 
 print(vancouver_trees_data)
@@ -354,19 +354,19 @@ vancouver_trees_data %>%
 ###### Summarizing Task:
 For this research question, I have chosen summarizing task # 2. As per the instructions, I have computed the number of observations (rows) for the categorical variable *genus_name* below. I have sliced the dataset to keep only the top 5 most prevalent genera in Vancouver. The reasoning for this will become apparent in the corresponding graphing task.
 ```{r}
-vancouver_trees_data_top10 <- vancouver_trees_data %>%
+vancouver_trees_data_top5 <- vancouver_trees_data %>%
   group_by(genus_name) %>%
   summarise(n=n()) %>%
   arrange(desc(n)) %>%
   slice(1:5)
 
-print(vancouver_trees_data_top10)
+print(vancouver_trees_data_top5)
 ```
 ###### Graphing Task:
 I will be completing graphing task # 7, which requires the use of alpha transparency. Below, I have created a density plot which shows the distribution of the numeric variable *diameter* according to *genus_name*. Given that this dataset has a wide array of genera, I will be looking only at the top 5 genera of trees that are most prevalent in Vancouver. Additionally, based on previous analyses, I know that the range of *diameter* is quite long. Due to this, I will limit the range of my x-axis to 0-50 feet.
 ```{r}
 vancouver_trees_data %>%
-  filter(genus_name %in% vancouver_trees_data_top10$genus_name) %>%
+  filter(genus_name %in% vancouver_trees_data_top5$genus_name) %>%
   ggplot(mapping = aes(x = diameter, group = genus_name, fill = genus_name)) +
   geom_density(alpha=0.5) +
   labs(x = "Diameter of Tree at Breast Height (in)", y = "Density") +
@@ -392,33 +392,31 @@ geom_point(size = 0.009, color="black") +
   labs(x = "Diameter of Tree at Breast Height (in)", y = "Height Range (0-10)")+
   theme_linedraw()
 ```
-##### *Research Question # 4: Are decisions to plant a specific genus of a tree dependent on whether or not it typically requires a root barrier?*
-###### Summarizing Task
-For this research question, I will take a look at root barriers. Root barriers are physical barriers that redirect roots away from hardscapes without harming the tree, while also preventing expensive damage due to its roots. I hypothesize that the genus of trees requiring root barriers will be negatively correlated to the frequency of this genus. I suspect that the risk of damage is higher with these genera, which decreases the likelihood that the city will plant these trees.
+##### *Research Question # 4: Which neighborhood in Vancouver has the greatest biodiversity?
+```{r}
+vancouver_trees_data_neighborhood <- vancouver_trees_data %>%
+  group_by(neighbourhood_name) %>%
+  summarize(n=n())
 
-To this end, I will be completing summarizing task # 2 for this question. The two categorical variables I will be using are *genus_name* and *root_barrier*. I will begin by computing the number of observations (rows) for the *genus_name* variable.
-```{r}
-vancouver_trees_genus <- vancouver_trees_data %>%
-  group_by(genus_name) %>%
-  summarize(n= n()) %>%
-print(vancouver_trees_genus)
+print(vancouver_trees_data_neighborhood)
 ```
-In order to answer my research question, I also need to calculate the percentage of trees in each genus which have a root barrier. This is done below!
 ```{r}
-vancouver_trees_barrier <- vancouver_trees_data %>%
-  group_by(genus_name) %>%
-  filter(root_barrier=="Y") %>%
-  summarize(n=n()) %>%
-  ungroup()
-print(vancouver_trees_barrier)
-```
-In order to determine the proportion of trees belonging to each genera that have a root barrier, I will be combining the two datasets from above.
-```{r}
-vancouver_trees_frequency <- right_join(vancouver_trees_barrier,vancouver_trees_genus)
-print(vancouver_trees_frequency)
-```
+vancouver_trees_data_neighborhood <- vancouver_trees_data %>%
+  group_by(neighbourhood_name) %>%
+  filter(neighbourhood_name %in% vancouver_trees_data_neighborhood$neighbourhood_name) %>%
+  summarise(n=n(), n_species = n_distinct(species_name))
 
-###### Graphing Task
+print(vancouver_trees_data_neighborhood)
+```
+```{r}
+vancouver_trees_data_neighborhood %>%
+  ggplot(aes(x = neighbourhood_name, group = 1)) +
+  geom_col(aes(y = n), color="coral1", fill="coral", alpha=0.5) +
+  geom_line(aes(y= n_species*10)) +
+  labs(x = "Name of Neighborhood", y = "Number of Trees") +
+  scale_x_discrete(guide = guide_axis(angle = 90)) +
+  theme(axis.text.x = element_text(size=6))
+```
 
 <!----------------------------------------------------------------------------->
 
