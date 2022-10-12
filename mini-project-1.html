@@ -525,8 +525,7 @@ datasets. The 4 attributes investigated are the following: class, number
 of observations (rows), number of variables (columns), names of all
 variables. To finish this exploration, the first 5 rows of each dataset
 will be displayed!</p>
-<p><strong>The code below explores the attributes of the
-<em>cancer_sample</em> dataset.</strong></p>
+<p><strong>The code below explores the attributes of the <span style="color: blue;"><em>cancer_sample</em></span> dataset.</strong></p>
 <pre class="r"><code>class(cancer_sample)</code></pre>
 <pre><code>## [1] &quot;spec_tbl_df&quot; &quot;tbl_df&quot;      &quot;tbl&quot;         &quot;data.frame&quot;</code></pre>
 <pre class="r"><code>nrow(cancer_sample)</code></pre>
@@ -566,8 +565,8 @@ will be displayed!</p>
 ## #   radius_worst &lt;dbl&gt;, texture_worst &lt;dbl&gt;, perimeter_worst &lt;dbl&gt;,
 ## #   area_worst &lt;dbl&gt;, smoothness_worst &lt;dbl&gt;, compactness_worst &lt;dbl&gt;,
 ## #   concavity_worst &lt;dbl&gt;, concave_points_worst &lt;dbl&gt;, symmetry_worst &lt;dbl&gt;, …</code></pre>
-<p><strong>The code below explores the attributes of the
-<em>vancouver_trees</em> dataset.</strong></p>
+<p><strong>The code below explores the attributes of the <span style="color: blue;"><em>vancouver_trees</em></span>
+dataset.</strong></p>
 <pre class="r"><code>class(vancouver_trees)</code></pre>
 <pre><code>## [1] &quot;tbl_df&quot;     &quot;tbl&quot;        &quot;data.frame&quot;</code></pre>
 <pre class="r"><code>nrow(vancouver_trees)</code></pre>
@@ -597,8 +596,7 @@ will be displayed!</p>
 ## #   longitude &lt;dbl&gt;, latitude &lt;dbl&gt;, and abbreviated variable names
 ## #   ¹​std_street, ²​genus_name, ³​species_name, ⁴​cultivar_name, ⁵​common_name,
 ## #   ⁶​assigned, ⁷​root_barrier</code></pre>
-<p><strong>The code below explores the attributes of the
-<em>steam_games</em> dataset.</strong></p>
+<p><strong>The code below explores the attributes of the <span style="color: blue;"><em>steam_games</em></span> dataset.</strong></p>
 <pre class="r"><code>class(steam_games)</code></pre>
 <pre><code>## [1] &quot;spec_tbl_df&quot; &quot;tbl_df&quot;      &quot;tbl&quot;         &quot;data.frame&quot;</code></pre>
 <pre class="r"><code>nrow(steam_games)</code></pre>
@@ -632,8 +630,8 @@ will be displayed!</p>
 ## #   recommended_requirements &lt;chr&gt;, original_price &lt;dbl&gt;, discount_price &lt;dbl&gt;,
 ## #   and abbreviated variable names ¹​desc_snippet, ²​recent_reviews,
 ## #   ³​all_reviews, ⁴​release_date, ⁵​developer, ⁶​publisher</code></pre>
-<p><strong>The code below explores the attributes of the
-<em>parking_meters</em> dataset.</strong></p>
+<p><strong>The code below explores the attributes of the <span style="color: blue;"><em>parking_meters</em></span>
+dataset.</strong></p>
 <pre class="r"><code>class(parking_meters)</code></pre>
 <pre><code>## [1] &quot;tbl_df&quot;     &quot;tbl&quot;        &quot;data.frame&quot;</code></pre>
 <pre class="r"><code>nrow(parking_meters)</code></pre>
@@ -676,17 +674,20 @@ following 2 datasets:</p>
 <ol style="list-style-type: decimal">
 <li><p><strong>cancer_sample:</strong> I have chosen this dataset purely
 out of interest and relevance. I am a graduate student in the Department
-of Microbiology &amp; Immunology based at BCCHR. As such, my graduate
-thesis project is heavily reliant on the ability to work with and
-manipulate healthcare data. For this reason, I believe that the
-cancer_sample dataset is most similar to the datasets I will be working
-on in the future, and, thus, a good dataset for me to ‘get my feet
-wet’!</p></li>
+of Microbiology &amp; Immunology and my supervisor’s lab is based at
+BCCHR. As such, my graduate thesis project is heavily reliant on the
+ability to work with and manipulate healthcare data. For this reason, I
+believe that the cancer_sample dataset is most similar to the datasets I
+will be working on in the future, and, thus, a good dataset for me to
+‘get my feet wet’!</p></li>
 <li><p><strong>vancouver_trees:</strong> I chose this dataset because it
-has the greatest number of observations (rows) out of the 7 given
+has the greatest number of observations(rows) out of the 7 given
 datasets. Datasets with a large number of observations(rows) are
-generally preferred for statistical analysis because they have higher
-statistical power and, thus, better predictive capabilities.
+generally preferred for statistical analysis because they usually have a
+higher statistical power and, thus, better predictive capabilities. I
+also find this dataset very interesting because it’ll allow me to
+explore topics that I normally wouldn’t have the time/opportunity to
+investigate.
 <!-----------------------------------------------------------------------------></p></li>
 </ol>
 <p>1.4 Time for the final decision! Going back to the beginning, it’s
@@ -698,17 +699,23 @@ each dataset. Note them down below, and make your final choice based on
 what seems more interesting to you!</p>
 <!-------------------------- Start your work below ---------------------------->
 </div>
-<div id="final-decision-regarding-dataset-to-explore-further" class="section level4">
-<h4><em>Final Decision Regarding DataSet To Explore Further</em></h4>
+<div id="final-decision-regarding-which-dataset-to-explore-further" class="section level4">
+<h4><em>Final Decision Regarding Which DataSet To Explore
+Further</em></h4>
 <p>In an attempt to decide on a dataset between the 2 listed previously,
 I have chosen 1 research question for each dataset. The research
 questions are as follows:</p>
 <ol style="list-style-type: decimal">
-<li><strong>cancer_sample:</strong></li>
+<li><strong>cancer_sample:</strong> Do cell nuclei classified as
+malignant have a greater, smaller, or equal radius compared to those
+classified as benign?</li>
 <li><strong>vancouver_trees:</strong> On average, during which month of
-the year are the most trees planted in Vancouver?
-<!-----------------------------------------------------------------------------></li>
+the year are the most trees planted in Vancouver?</li>
 </ol>
+<p><span style="color: limegreen;"><strong>Based on the questions listed
+above, I have decided to explore the <em>vancouver_trees</em> dataset
+further.</strong></span>
+<!-----------------------------------------------------------------------------></p>
 </div>
 </div>
 <div id="important-note" class="section level1">

@@ -95,7 +95,7 @@ And that is exactly the first thing that you will do!
 #### *Determining the attributes of my potential datasets*
 The 4 code chunks below explore the attributes of my 4 potential datasets. The 4 attributes investigated are the following: class, number of observations (rows), number of variables (columns), names of all variables. To finish this exploration, the first 5 rows of each dataset will be displayed!
 
-**The code below explores the attributes of the *cancer_sample* dataset.**
+**The code below explores the attributes of the <span style ="color: blue;">*cancer_sample*</span> dataset.**
 ```{r}
 class(cancer_sample)
 nrow(cancer_sample)
@@ -104,7 +104,7 @@ names(cancer_sample)
 head(cancer_sample, 5)
 ```
 
-**The code below explores the attributes of the *vancouver_trees* dataset.**
+**The code below explores the attributes of the <span style ="color: blue;">*vancouver_trees*</span> dataset.**
 ```{r}
 class(vancouver_trees)
 nrow(vancouver_trees)
@@ -113,7 +113,7 @@ names(vancouver_trees)
 head(vancouver_trees, 5)
 ```
 
-**The code below explores the attributes of the *steam_games* dataset.**
+**The code below explores the attributes of the <span style ="color: blue;">*steam_games*</span> dataset.**
 ```{r}
 class(steam_games)
 nrow(steam_games)
@@ -122,7 +122,7 @@ names(steam_games)
 head(steam_games, 5)
 ```
 
-**The code below explores the attributes of the *parking_meters* dataset.**
+**The code below explores the attributes of the <span style ="color: blue;">*parking_meters*</span> dataset.**
 ```{r}
 class(parking_meters)
 nrow(parking_meters)
@@ -140,22 +140,22 @@ head(parking_meters, 5)
 
 After giving it much thought, I have narrowed my options down to the following 2 datasets:
 
-1. **cancer_sample:** I have chosen this dataset purely out of interest and relevance. I am a graduate student in the Department of Microbiology & Immunology based at BCCHR. As such, my graduate thesis project is heavily reliant on the ability to work with and manipulate healthcare data. For this reason, I believe that the cancer_sample dataset is most similar to the datasets I will be working on in the future, and, thus, a good dataset for me to 'get my feet wet'!
+1. **cancer_sample:** I have chosen this dataset purely out of interest and relevance. I am a graduate student in the Department of Microbiology & Immunology and my supervisor's lab is based at BCCHR. As such, my graduate thesis project is heavily reliant on the ability to work with and manipulate healthcare data. For this reason, I believe that the cancer_sample dataset is most similar to the datasets I will be working on in the future, and, thus, a good dataset for me to 'get my feet wet'!
 
-2. **vancouver_trees:** I chose this dataset because it has the greatest number of observations (rows) out of the 7 given datasets. Datasets with a large number of observations(rows) are generally preferred for statistical analysis because they have higher statistical power and, thus, better predictive capabilities.
+2. **vancouver_trees:** I chose this dataset because it has the greatest number of observations(rows) out of the 7 given datasets. Datasets with a large number of observations(rows) are generally preferred for statistical analysis because they usually have a higher statistical power and, thus, better predictive capabilities. I also find this dataset very interesting because it'll allow me to explore topics that I normally wouldn't have the time/opportunity to investigate.
 <!----------------------------------------------------------------------------->
 
 1.4 Time for the final decision! Going back to the beginning, it's important to have an *end goal* in mind. For example, if I had chosen the `titanic` dataset for my project, I might've wanted to explore the relationship between survival and other variables. Try to think of 1 research question that you would want to answer with each dataset. Note them down below, and make your final choice based on what seems more interesting to you!
 
 <!-------------------------- Start your work below ---------------------------->
-#### *Final Decision Regarding DataSet To Explore Further*
+#### *Final Decision Regarding Which DataSet To Explore Further*
 
 In an attempt to decide on a dataset between the 2 listed previously, I have chosen 1 research question for each dataset. The research questions are as follows:
 
 1. **cancer_sample:** Do cell nuclei classified as malignant have a greater, smaller, or equal radius compared to those classified as benign?
 2. **vancouver_trees:** On average, during which month of the year are the most trees planted in Vancouver?
 
-According to the questions listed above, I am much more interested in exploring the *cancer_sample* dataset further.
+<span style="color: limegreen;">**Based on the questions listed above, I have decided to explore the *vancouver_trees* dataset further.**</span>
 <!----------------------------------------------------------------------------->
 
 # Important note
@@ -182,7 +182,69 @@ If we rewind and go back to the learning objectives, you'll see that by the end 
 2.2 For each of the 4 exercises that you complete, provide a *brief explanation* of why you chose that exercise in relation to your data (in other words, why does it make sense to do that?), and sufficient comments for a reader to understand your reasoning and code.
 
 <!-------------------------- Start your work below ---------------------------->
+#### *Exploring the Dataset*
+In order to get a better understanding of this dataset, I have completed 4 different exercises below using *dplyr* and *ggplot*.
 
+##### *Exercise 1: Investigate the number of missing values per variable and plot it*
+To begin this exploration of the *vancouver_trees* dataset, I will start by determining which variables have the greatest number of missing values. This will be helpful in future analyses, as it will allow me to interpret trends/patterns associated with these variables with caution.
+
+First off, missing values in this dataset are indicated by blank cells. I will start by converting these cells to NA in order to be able to count the number of NA's in th subsequent steps. I will also print a summary of the dataset to ensure that there are NA's present in the dataset following the aforementioned manipulations.
+```{r}
+vancouver_trees_with_NA <- vancouver_trees %>%
+  na_if(y = "")
+summary(vancouver_trees_with_NA)
+```
+Next, I will count the number of NA's for each variable and plot this information on a bar plot, with the x-axis labeled 'Name of Variable' and the y-axis being labeled 'Number of Missing Values'.
+```{r}
+count_NA <- vancouver_trees_with_NA %>%
+  summarise(across(c(everything(),-tree_id,-civic_number), ~ sum(is.na(.))))
+
+count_NA_long <- count_NA %>%
+  pivot_longer(std_street:latitude)
+
+count_NA_long %>%
+  ggplot(aes(x = name, y = value)) +
+  geom_col(color = "chartreuse4", fill = "chartreuse3") +
+  labs(x = "Name of Variable", y = "Number of Missing Values") +
+  scale_x_discrete(guide = guide_axis(angle = 90)) +
+  theme_classic()
+```
+
+##### *Exercise 2: Create a new variable based on other variables in your data (only if it makes sense)*
+The vancouver_trees dataset contains a variable named *height_range_ID*. This variable is stored as a numeric variable; however, in reality, it represents different categories into which the trees are placed. For example, a height_range_id of 5 means that the height of the tree is anywhere from 50-60 feet. On the lower end, a height_range_id of 0 means that the height of the tree is anywhere from 0-10 feet. On the other extreme, a height_range_id of 10 means that the height of the tree is greater than 100 feet. As a result, I will be converting this numerical variable into a factor with the levels being 0-10, 10-20, 20-30, and so on. At the end, I use the levels() function to ensure that this worked!
+
+This will result in the creation of the vancouver_trees_height_factor dataset, which is a modified form of vancouver_trees. It has all blank values replaced with NA, and a new column has been created called 'height' which is a factor with the levels previously described.
+
+```{r}
+vancouver_trees_height_factor <- vancouver_trees_with_NA %>%
+  mutate('height' = as.factor(height_range_id))
+
+height_factors <- c('0' = "0-10", '1' = "10-20", '2' = "20-30", '3' = "30-40", '4' = "40-50", '5' = "50-60", '6' = "60-70", '7' = "70-80", '8' = "80-90", '9' = "90-100", '10' = "Above 100")
+
+vancouver_trees_height_factor$height <- recode_factor(vancouver_trees_height_factor$height, !!!height_factors, .ordered = TRUE)
+
+levels(vancouver_trees_height_factor$height)
+```
+
+##### *Exercise 3: Plot the distribution of a numeric variable*
+For this exercise, I intend to plot the distribution of the diameter (inches) of trees in Vancouver. I will to create a density plot which has 'Diameter of Tree at Breast Height (in)' on the x-axis and 'Density' on the y-axis. A blue dotted line will be used to the indicate the mean diameter of all trees in Vancouver.
+```{r}
+vancouver_trees_height_factor %>%
+  ggplot(mapping = aes(diameter)) +
+  geom_density(alpha=0.09, color="chartreuse4", fill = "chartreuse4") +
+  labs(x = "Diameter of Tree at Breast Height (in)", y = "Density") +
+  geom_vline(aes(xintercept=mean(diameter)), color="lightslateblue", linetype="dashed", size=0.5)
+```
+##### *Exercise 4: Make a new tibble with a subset of your data, with variables and observations that you are interested in exploring*
+I have created many modified versions of the vancouver_trees dataset in the previous three exercises. Now, I will create a new tibble, which will contain a subset of my data, more specifically the variables that I consider to be potentially relevant for my 4 research questions. Lastly, I will print the tibble to ensure that it has the correct number of columns and was subsetted correctly!
+```{r}
+irrelevant_variables <- c("tree_id","civic_number","assigned","height_range_id","longitude","latitude")
+
+vancouver_trees_data <- vancouver_trees_height_factor %>%
+  select(everything(),-irrelevant_variables)
+
+print(vancouver_trees_data)
+```
 <!----------------------------------------------------------------------------->
 
 # Task 3: Write your research questions (5 points)
@@ -190,7 +252,9 @@ If we rewind and go back to the learning objectives, you'll see that by the end 
 So far, you have chosen a dataset and gotten familiar with it through exploring the data. Now it's time to figure out 4 research questions that you would like to answer with your data! Write the 4 questions and any additional comments at the end of this deliverable. These questions are not necessarily set in stone - TAs will review them and give you feedback; therefore, you may choose to pursue them as they are for the rest of the project, or make modifications!
 
 <!--- *****START HERE***** --->
-
+#### *My 4 Research Questions*
+My 4 potential research questions for the *vancouver_trees* dataset are as follows:
+1. 
 # Task 4: Process and summarize your data (13 points)
 
 From Task 2, you should have an idea of the basic structure of your dataset (e.g. number of rows and columns, class types, etc.). Here, we will start investigating your data more in-depth using various data manipulation functions.
