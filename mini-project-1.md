@@ -571,83 +571,7 @@ count_NA_long %>%
 
 ![](mini-project-1_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
 
-#### **<span style="color: deeppink;">Exercise 2: Create a new variable based on other variables in your data (only if it makes sense)</span>**
-
-For this section of my data analysis, I will create a categorical
-variable (decade) from the existing numerical variable (date_planted).
-
-``` r
-vancouver_trees$year_planted <- as.numeric(format(vancouver_trees$date_planted,'%Y'))
-```
-
-``` r
-minimum_year <- min(vancouver_trees$year_planted, na.rm = TRUE)
-maximum_year <- max(vancouver_trees$year_planted, na.rm = TRUE)
-
-print(minimum_year)
-```
-
-    ## [1] 1989
-
-``` r
-print(maximum_year)
-```
-
-    ## [1] 2019
-
-After extracting the year from the date, and determining the minimum and
-maximum values for year stored in this dataset, I can now decide on the
-factor levels which will be as follows: 1980s, 1990s, 2000s, 2010s,
-2020s. I will now convert this numeric variable into a categorical
-variable below!
-
-``` r
-vancouver_trees_data_1980s <- vancouver_trees %>%
-  filter(1980<=year_planted, year_planted<1990) %>%
-  mutate(year = '1980s')
-
-vancouver_trees_data_1990s <- vancouver_trees %>%
-  filter(1990<=year_planted, year_planted<2000) %>%
-  mutate(year = '1990s')
-
-vancouver_trees_data_2000s <- vancouver_trees %>%
-  filter(2000<=year_planted, year_planted<2010) %>%
-  mutate(year = '2000s')
-
-vancouver_trees_data_2010s <- vancouver_trees %>%
-  filter(2010<=year_planted, year_planted<2020) %>%
-  mutate(year = '2010s')
-
-vancouver_trees_data_2020s <- vancouver_trees %>%
-  filter(2020<=year_planted) %>%
-  mutate(year = '2020s')
-
-vancouver_trees<- bind_rows(vancouver_trees_data_1980s,vancouver_trees_data_1990s,vancouver_trees_data_2000s,vancouver_trees_data_2010s,vancouver_trees_data_2020s)
-
-print(vancouver_trees)
-```
-
-    ## # A tibble: 70,063 × 22
-    ##    tree_id civic_number std_st…¹ genus…² speci…³ culti…⁴ commo…⁵ assig…⁶ root_…⁷
-    ##      <dbl>        <dbl> <chr>    <chr>   <chr>   <chr>   <chr>   <chr>   <chr>  
-    ##  1   31395         2105 W 32ND … TILIA   CORDATA <NA>    LITTLE… N       N      
-    ##  2   31396         2105 W 32ND … TILIA   CORDATA <NA>    LITTLE… N       N      
-    ##  3   30343         3621 W 30TH … PRUNUS  CERASI… ATROPU… PISSAR… N       N      
-    ##  4   30356         3727 W 30TH … PRUNUS  CERASI… ATROPU… PISSAR… N       N      
-    ##  5   30359         3749 W 30TH … PRUNUS  CERASI… ATROPU… PISSAR… N       N      
-    ##  6   83393         2888 HIGHBUR… PRUNUS  CERASI… ATROPU… PISSAR… N       N      
-    ##  7   38849         2198 W 41ST … PRUNUS  SERRUL… KWANZAN KWANZA… N       N      
-    ##  8  121796         5003 BOUNDAR… ACER    RUBRUM  RED SU… RED SU… N       N      
-    ##  9  121800         5035 BOUNDAR… ACER    RUBRUM  RED SU… RED SU… N       N      
-    ## 10  121802         5053 BOUNDAR… ACER    RUBRUM  RED SU… RED SU… N       N      
-    ## # … with 70,053 more rows, 13 more variables: plant_area <chr>,
-    ## #   on_street_block <dbl>, on_street <chr>, neighbourhood_name <chr>,
-    ## #   street_side_name <chr>, height_range_id <dbl>, diameter <dbl>, curb <chr>,
-    ## #   date_planted <date>, longitude <dbl>, latitude <dbl>, year_planted <dbl>,
-    ## #   year <chr>, and abbreviated variable names ¹​std_street, ²​genus_name,
-    ## #   ³​species_name, ⁴​cultivar_name, ⁵​common_name, ⁶​assigned, ⁷​root_barrier
-
-#### **<span style="color: deeppink;">Exercise 3: Plot the distribution of a numeric variable</span>**
+### **<span style="color: deeppink;">Exercise 2: Plot the distribution of a numeric variable</span>**
 
 For this exercise, I intend to plot the distribution of the
 *height_range_id* of trees in Vancouver. I have created a histogram
@@ -661,9 +585,9 @@ vancouver_trees%>%
   labs(x = "Height Range of Tree (x10 ft)", y = "Count")
 ```
 
-![](mini-project-1_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
+![](mini-project-1_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
 
-#### **<span style="color: deeppink;">Exercise 4: Make a new tibble with a subset of your data, with variables and observations that you are interested in exploring</span>**
+### **<span style="color: deeppink;">Exercise 3: Create a new variable based on other variables in your data (only if it makes sense)</span>**
 
 The vancouver_trees dataset contains a variable named *height_range_ID*.
 This variable is stored as a numeric variable; however, in reality, it
@@ -682,27 +606,58 @@ values replaced with NA, and a new column has been created called
 ‘height’ which is a factor with the levels previously described.
 
 ``` r
-vancouver_trees <- vancouver_trees %>%
+vancouver_trees_height_factor <- vancouver_trees %>%
   mutate('height' = as.factor(height_range_id))
 height_factors <- c('0' = "0-10", '1' = "10-20", '2' = "20-30", '3' = "30-40", '4' = "40-50", '5' = "50-60", '6' = "60-70", '7' = "70-80", '8' = "80-90", '9' = "90-100", '10' = "Above 100")
-vancouver_trees$height <- recode_factor(vancouver_trees$height, !!!height_factors, .ordered = TRUE)
-levels(vancouver_trees$height)
+vancouver_trees_height_factor$height <- recode_factor(vancouver_trees_height_factor$height, !!!height_factors, .ordered = TRUE)
+levels(vancouver_trees_height_factor$height)
 ```
 
     ##  [1] "0-10"      "10-20"     "20-30"     "30-40"     "40-50"     "50-60"    
     ##  [7] "60-70"     "70-80"     "80-90"     "90-100"    "Above 100"
 
-<!----------------------------------------------------------------------------->
+### **<span style="color: deeppink;">Exercise 3: Make a new tibble with a subset of your data, with variables and observations that you are interested in exploring</span>**
 
-# Task 3: Write your research questions (5 points)
+For this exercise, I will create a new tibble, which will contain a
+subset of my data, more specifically the variables that I consider to be
+potentially relevant for my 4 research questions. Lastly, I will print
+the tibble to ensure that it has the correct number of columns and was
+subsetted correctly!
 
-So far, you have chosen a dataset and gotten familiar with it through
-exploring the data. Now it’s time to figure out 4 research questions
-that you would like to answer with your data! Write the 4 questions and
-any additional comments at the end of this deliverable. These questions
-are not necessarily set in stone - TAs will review them and give you
-feedback; therefore, you may choose to pursue them as they are for the
-rest of the project, or make modifications!
+``` r
+irrelevant_variables <- c("tree_id","civic_number","assigned","longitude","latitude")
+
+vancouver_trees_data <- vancouver_trees %>%
+  select(everything(),-irrelevant_variables)
+```
+
+    ## Note: Using an external vector in selections is ambiguous.
+    ## ℹ Use `all_of(irrelevant_variables)` instead of `irrelevant_variables` to silence this message.
+    ## ℹ See <https://tidyselect.r-lib.org/reference/faq-external-vector.html>.
+    ## This message is displayed once per session.
+
+``` r
+print(vancouver_trees_data)
+```
+
+    ## # A tibble: 146,611 × 15
+    ##    std_street    genus…¹ speci…² culti…³ commo…⁴ root_…⁵ plant…⁶ on_st…⁷ on_st…⁸
+    ##    <chr>         <chr>   <chr>   <chr>   <chr>   <chr>   <chr>     <dbl> <chr>  
+    ##  1 W 58TH AV     ULMUS   AMERIC… BRANDON BRANDO… N       N           400 W 58TH…
+    ##  2 W 58TH AV     ZELKOVA SERRATA <NA>    JAPANE… N       N           400 W 58TH…
+    ##  3 WINDSOR ST    STYRAX  JAPONI… <NA>    JAPANE… N       4          4900 WINDSO…
+    ##  4 E 39TH AV     FRAXIN… AMERIC… AUTUMN… AUTUMN… N       4           800 E 39TH…
+    ##  5 WINDSOR ST    ACER    CAMPES… <NA>    HEDGE … N       4          5000 WINDSO…
+    ##  6 W 61ST AV     PYRUS   CALLER… CHANTI… CHANTI… N       B           500 W 61ST…
+    ##  7 SHERBROOKE ST ACER    PLATAN… COLUMN… COLUMN… N       6          4900 SHERBR…
+    ##  8 SHERBROOKE ST ACER    PLATAN… COLUMN… COLUMN… N       6          4900 SHERBR…
+    ##  9 SHERBROOKE ST ACER    PLATAN… COLUMN… COLUMN… N       3          4900 SHERBR…
+    ## 10 E 39TH AV     FRAXIN… AMERIC… AUTUMN… AUTUMN… N       3           700 E 39TH…
+    ## # … with 146,601 more rows, 6 more variables: neighbourhood_name <chr>,
+    ## #   street_side_name <chr>, height_range_id <dbl>, diameter <dbl>, curb <chr>,
+    ## #   date_planted <date>, and abbreviated variable names ¹​genus_name,
+    ## #   ²​species_name, ³​cultivar_name, ⁴​common_name, ⁵​root_barrier, ⁶​plant_area,
+    ## #   ⁷​on_street_block, ⁸​on_street
 
 <!--- *****START HERE***** --->
 
@@ -783,20 +738,20 @@ vancouver_trees %>%
   summarize(range_diameter = max(diameter)-min(diameter), mean_diameter = mean(diameter), sd_diameter = sd(diameter), IQR_diameter = IQR(diameter))
 ```
 
-    ## # A tibble: 79 × 5
+    ## # A tibble: 97 × 5
     ##    genus_name  range_diameter mean_diameter sd_diameter IQR_diameter
     ##    <chr>                <dbl>         <dbl>       <dbl>        <dbl>
-    ##  1 ABIES                 31            6.94        5.53         8.25
-    ##  2 ACER                 317            5.59        4.42         4   
-    ##  3 AESCULUS              62            9.58       11.6          5   
-    ##  4 ALBIZIA                0            6          NA            0   
-    ##  5 ALNUS                 11            7.75        5.46         9.88
-    ##  6 AMELANCHIER           18.5          3.27        1.90         0   
-    ##  7 BETULA                39            9.05        5.53         5   
-    ##  8 CALOCEDRUS            18.8          6.61        5.19         6   
-    ##  9 CARPINUS              86            5.86        4.05         5   
-    ## 10 CASTANEA              11            5.2         4.92         0   
-    ## # … with 69 more rows
+    ##  1 ABIES                 41.5         12.9         9.71        16.5 
+    ##  2 ACER                 317           10.6         8.76        12   
+    ##  3 AESCULUS              64           23.7         9.57        11   
+    ##  4 AILANTHUS             18.5         15.9         8.64         5.38
+    ##  5 ALBIZIA                0            6          NA            0   
+    ##  6 ALNUS                 40           17.5         8.94        11.4 
+    ##  7 AMELANCHIER           20            3.21        1.79         0   
+    ##  8 ARALIA                 9            6.81        3.92         4.31
+    ##  9 ARAUCARIA             29           11.4         9.92         8.75
+    ## 10 ARBUTUS               27           18.4        10.7         20.8 
+    ## # … with 87 more rows
 
 #### **<span style="color: orange;">Graphing Task</span>**
 
@@ -826,7 +781,7 @@ vancouver_trees %>%
   theme_classic()
 ```
 
-![](mini-project-1_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
+![](mini-project-1_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
 
 ``` r
 vancouver_trees %>%
@@ -836,7 +791,7 @@ vancouver_trees %>%
   theme_classic()
 ```
 
-![](mini-project-1_files/figure-gfm/unnamed-chunk-16-1.png)<!-- -->
+![](mini-project-1_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->
 
 ``` r
 optimal_bin_width <- ((IQR(vancouver_trees$diameter))*2)/(length(vancouver_trees$diameter)^(1/3))
@@ -848,7 +803,7 @@ vancouver_trees %>%
   theme_classic()
 ```
 
-![](mini-project-1_files/figure-gfm/unnamed-chunk-17-1.png)<!-- -->
+![](mini-project-1_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
 
 ### **<span style="color: deeppink;">Research Question \# 2: Which genus of trees in Vancouver has the greatest diameter?</span>**
 
@@ -873,11 +828,11 @@ print(vancouver_trees_top5)
     ## # A tibble: 5 × 2
     ##   genus_name     n
     ##   <chr>      <int>
-    ## 1 ACER       19544
-    ## 2 PRUNUS      8880
-    ## 3 FRAXINUS    4562
-    ## 4 CARPINUS    3812
-    ## 5 FAGUS       3400
+    ## 1 ACER       36062
+    ## 2 PRUNUS     30683
+    ## 3 FRAXINUS    7381
+    ## 4 TILIA       6773
+    ## 5 QUERCUS     6119
 
 #### **<span style="color: orange;">Graphing Task:</span>**
 
@@ -900,9 +855,9 @@ vancouver_trees %>%
   theme_linedraw()
 ```
 
-    ## Warning: Removed 14 rows containing non-finite values (stat_density).
+    ## Warning: Removed 61 rows containing non-finite values (stat_density).
 
-![](mini-project-1_files/figure-gfm/unnamed-chunk-19-1.png)<!-- -->
+![](mini-project-1_files/figure-gfm/unnamed-chunk-17-1.png)<!-- -->
 
 ### **<span style="color: deeppink;">Research Question \# 3: Is there a linear relationship between the height and diameter of trees?</span>**
 
@@ -923,20 +878,20 @@ vancouver_trees %>%
   summarize(range_height_range_id = max(height_range_id)-min(height_range_id), mean_height_range_id = mean(height_range_id), sd_height_range_id = sd(height_range_id), IQR_height_range_id = IQR(height_range_id))
 ```
 
-    ## # A tibble: 79 × 5
+    ## # A tibble: 97 × 5
     ##    genus_name  range_height_range_id mean_height_range_id sd_height_ra…¹ IQR_h…²
     ##    <chr>                       <dbl>                <dbl>          <dbl>   <dbl>
-    ##  1 ABIES                           5                 1.68          0.965    1   
-    ##  2 ACER                            8                 1.75          0.943    1   
-    ##  3 AESCULUS                        7                 2.20          1.60     1   
-    ##  4 ALBIZIA                         0                 2            NA        0   
-    ##  5 ALNUS                           3                 2.17          1.33     2   
-    ##  6 AMELANCHIER                     3                 1.13          0.479    0   
-    ##  7 BETULA                          5                 2.41          0.903    1   
-    ##  8 CALOCEDRUS                      5                 1.64          1.29     0.75
-    ##  9 CARPINUS                        6                 1.74          0.879    1   
-    ## 10 CASTANEA                        3                 2.4           1.14     1   
-    ## # … with 69 more rows, and abbreviated variable names ¹​sd_height_range_id,
+    ##  1 ABIES                           9                 3.21          2.03     4   
+    ##  2 ACER                           10                 2.73          1.61     3   
+    ##  3 AESCULUS                        8                 4.60          1.47     2   
+    ##  4 AILANTHUS                       4                 3.5           1.73     1   
+    ##  5 ALBIZIA                         0                 2            NA        0   
+    ##  6 ALNUS                           6                 3.99          1.36     1   
+    ##  7 AMELANCHIER                     4                 1.11          0.459    0   
+    ##  8 ARALIA                          2                 1.75          0.957    1.25
+    ##  9 ARAUCARIA                       5                 2.5           1.58     1.75
+    ## 10 ARBUTUS                         5                 3.2           1.62     1.75
+    ## # … with 87 more rows, and abbreviated variable names ¹​sd_height_range_id,
     ## #   ²​IQR_height_range_id
 
 #### **<span style="color: orange;">Graphing Task</span>**
@@ -954,7 +909,7 @@ geom_point(size = 0.009, color="black") +
 
     ## `geom_smooth()` using method = 'gam' and formula 'y ~ s(x, bs = "cs")'
 
-![](mini-project-1_files/figure-gfm/unnamed-chunk-21-1.png)<!-- -->
+![](mini-project-1_files/figure-gfm/unnamed-chunk-19-1.png)<!-- -->
 
 ### **<span style="color: deeppink;">Research Question \# 4: Which neighborhood in Vancouver has the greatest biodiversity?</span>**
 
@@ -974,16 +929,16 @@ print(vancouver_trees_data_neighborhood)
     ## # A tibble: 22 × 2
     ##    neighbourhood_name           n
     ##    <chr>                    <int>
-    ##  1 ARBUTUS-RIDGE             2654
-    ##  2 DOWNTOWN                  2250
-    ##  3 DUNBAR-SOUTHLANDS         3773
-    ##  4 FAIRVIEW                  1414
-    ##  5 GRANDVIEW-WOODLAND        3094
-    ##  6 HASTINGS-SUNRISE          6075
-    ##  7 KENSINGTON-CEDAR COTTAGE  5844
-    ##  8 KERRISDALE                3011
-    ##  9 KILLARNEY                 2927
-    ## 10 KITSILANO                 2564
+    ##  1 ARBUTUS-RIDGE             5169
+    ##  2 DOWNTOWN                  5159
+    ##  3 DUNBAR-SOUTHLANDS         9415
+    ##  4 FAIRVIEW                  4002
+    ##  5 GRANDVIEW-WOODLAND        6703
+    ##  6 HASTINGS-SUNRISE         10547
+    ##  7 KENSINGTON-CEDAR COTTAGE 11042
+    ##  8 KERRISDALE                6936
+    ##  9 KILLARNEY                 6148
+    ## 10 KITSILANO                 8115
     ## # … with 12 more rows
 
 ``` r
@@ -998,16 +953,16 @@ print(vancouver_trees_data_neighborhood)
     ## # A tibble: 22 × 3
     ##    neighbourhood_name           n n_species
     ##    <chr>                    <int>     <int>
-    ##  1 ARBUTUS-RIDGE             2654        91
-    ##  2 DOWNTOWN                  2250        57
-    ##  3 DUNBAR-SOUTHLANDS         3773       109
-    ##  4 FAIRVIEW                  1414        65
-    ##  5 GRANDVIEW-WOODLAND        3094       102
-    ##  6 HASTINGS-SUNRISE          6075       122
-    ##  7 KENSINGTON-CEDAR COTTAGE  5844       120
-    ##  8 KERRISDALE                3011        90
-    ##  9 KILLARNEY                 2927        75
-    ## 10 KITSILANO                 2564        95
+    ##  1 ARBUTUS-RIDGE             5169       121
+    ##  2 DOWNTOWN                  5159        79
+    ##  3 DUNBAR-SOUTHLANDS         9415       161
+    ##  4 FAIRVIEW                  4002       119
+    ##  5 GRANDVIEW-WOODLAND        6703       146
+    ##  6 HASTINGS-SUNRISE         10547       176
+    ##  7 KENSINGTON-CEDAR COTTAGE 11042       159
+    ##  8 KERRISDALE                6936       138
+    ##  9 KILLARNEY                 6148       122
+    ## 10 KITSILANO                 8115       171
     ## # … with 12 more rows
 
 #### **<span style="color: orange;">Graphing Task:</span>**
@@ -1030,7 +985,7 @@ vancouver_trees_data_neighborhood %>%
   theme(axis.text.x = element_text(size=6))
 ```
 
-![](mini-project-1_files/figure-gfm/unnamed-chunk-24-1.png)<!-- -->
+![](mini-project-1_files/figure-gfm/unnamed-chunk-22-1.png)<!-- -->
 
 <!----------------------------------------------------------------------------->
 

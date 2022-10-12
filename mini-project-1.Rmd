@@ -211,49 +211,7 @@ count_NA_long %>%
   theme_classic()
 ```
 
-#### **<span style ="color: deeppink;">Exercise 2: Create a new variable based on other variables in your data (only if it makes sense)</span>**
-
-For this section of my data analysis, I will create a categorical variable (decade) from the existing numerical variable (date_planted).
-```{r}
-vancouver_trees$year_planted <- as.numeric(format(vancouver_trees$date_planted,'%Y'))
-```
-
-```{r}
-minimum_year <- min(vancouver_trees$year_planted, na.rm = TRUE)
-maximum_year <- max(vancouver_trees$year_planted, na.rm = TRUE)
-
-print(minimum_year)
-print(maximum_year)
-```
-After extracting the year from the date, and determining the minimum and maximum values for year stored in this dataset, I can now decide on the factor levels which will be as follows: 1980s, 1990s, 2000s, 2010s, 2020s. I will now convert this numeric variable into a categorical variable below!
-
-```{r}
-vancouver_trees_data_1980s <- vancouver_trees %>%
-  filter(1980<=year_planted, year_planted<1990) %>%
-  mutate(year = '1980s')
-
-vancouver_trees_data_1990s <- vancouver_trees %>%
-  filter(1990<=year_planted, year_planted<2000) %>%
-  mutate(year = '1990s')
-
-vancouver_trees_data_2000s <- vancouver_trees %>%
-  filter(2000<=year_planted, year_planted<2010) %>%
-  mutate(year = '2000s')
-
-vancouver_trees_data_2010s <- vancouver_trees %>%
-  filter(2010<=year_planted, year_planted<2020) %>%
-  mutate(year = '2010s')
-
-vancouver_trees_data_2020s <- vancouver_trees %>%
-  filter(2020<=year_planted) %>%
-  mutate(year = '2020s')
-
-vancouver_trees<- bind_rows(vancouver_trees_data_1980s,vancouver_trees_data_1990s,vancouver_trees_data_2000s,vancouver_trees_data_2010s,vancouver_trees_data_2020s)
-
-print(vancouver_trees)
-```
-
-#### **<span style ="color: deeppink;">Exercise 3: Plot the distribution of a numeric variable</span>**
+### **<span style ="color: deeppink;">Exercise 2: Plot the distribution of a numeric variable</span>**
 
 For this exercise, I intend to plot the distribution of the *height_range_id* of trees in Vancouver. I have created a histogram which has 'Height Range of Tree (x10 ft)' on the x-axis and 'Count' on the y-axis.
 ```{r}
@@ -263,24 +221,30 @@ vancouver_trees%>%
   labs(x = "Height Range of Tree (x10 ft)", y = "Count")
 ```
 
-#### **<span style ="color: deeppink;">Exercise 4: Make a new tibble with a subset of your data, with variables and observations that you are interested in exploring</span>**
-
+### **<span style ="color: deeppink;">Exercise 3: Create a new variable based on other variables in your data (only if it makes sense)</span>**
 The vancouver_trees dataset contains a variable named *height_range_ID*. This variable is stored as a numeric variable; however, in reality, it represents different categories into which the trees are placed. For example, a height_range_id of 5 means that the height of the tree is anywhere from 50-60 feet. On the lower end, a height_range_id of 0 means that the height of the tree is anywhere from 0-10 feet. On the other extreme, a height_range_id of 10 means that the height of the tree is greater than 100 feet. As a result, I will be converting this numerical variable into a factor with the levels being 0-10, 10-20, 20-30, and so on. At the end, I use the levels() function to ensure that this worked!
 
 This will result in the creation of the vancouver_trees_height_factor dataset, which is a modified form of vancouver_trees. It has all blank values replaced with NA, and a new column has been created called 'height' which is a factor with the levels previously described.
 
 ```{r}
-vancouver_trees <- vancouver_trees %>%
+vancouver_trees_height_factor <- vancouver_trees %>%
   mutate('height' = as.factor(height_range_id))
 height_factors <- c('0' = "0-10", '1' = "10-20", '2' = "20-30", '3' = "30-40", '4' = "40-50", '5' = "50-60", '6' = "60-70", '7' = "70-80", '8' = "80-90", '9' = "90-100", '10' = "Above 100")
-vancouver_trees$height <- recode_factor(vancouver_trees$height, !!!height_factors, .ordered = TRUE)
-levels(vancouver_trees$height)
+vancouver_trees_height_factor$height <- recode_factor(vancouver_trees_height_factor$height, !!!height_factors, .ordered = TRUE)
+levels(vancouver_trees_height_factor$height)
 ```
 
-<!----------------------------------------------------------------------------->
-# Task 3: Write your research questions (5 points)
+### **<span style ="color: deeppink;">Exercise 3: Make a new tibble with a subset of your data, with variables and observations that you are interested in exploring</span>**
 
-So far, you have chosen a dataset and gotten familiar with it through exploring the data. Now it's time to figure out 4 research questions that you would like to answer with your data! Write the 4 questions and any additional comments at the end of this deliverable. These questions are not necessarily set in stone - TAs will review them and give you feedback; therefore, you may choose to pursue them as they are for the rest of the project, or make modifications!
+For this exercise, I will create a new tibble, which will contain a subset of my data, more specifically the variables that I consider to be potentially relevant for my 4 research questions. Lastly, I will print the tibble to ensure that it has the correct number of columns and was subsetted correctly!
+```{r}
+irrelevant_variables <- c("tree_id","civic_number","assigned","longitude","latitude")
+
+vancouver_trees_data <- vancouver_trees %>%
+  select(everything(),-irrelevant_variables)
+
+print(vancouver_trees_data)
+```
 
 <!--- *****START HERE***** --->
 ## **<span style ="color: purple;">My 4 Research Questions</span>**
