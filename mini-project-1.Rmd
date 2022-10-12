@@ -225,20 +225,61 @@ vancouver_trees_height_factor$height <- recode_factor(vancouver_trees_height_fac
 
 levels(vancouver_trees_height_factor$height)
 ```
+##### *Exercise 2: Create a new variable based on other variables in your data (only if it makes sense)*
+For this section of my data analysis, I have chosen summarizing task # 3, as described above. I will create a categorical variable (decade) from the existing numerical variable (date_planted).
+```{r}
+vancouver_trees$year_planted <- as.numeric(format(vancouver_trees$date_planted,'%Y'))
+
+```
+
+```{r}
+minimum_year <- min(vancouver_trees$year_planted, na.rm = TRUE)
+maximum_year <- max(vancouver_trees$year_planted, na.rm = TRUE)
+
+print(minimum_year)
+print(maximum_year)
+```
+After extracting the year from the date, and determining the minimum and maximum values for year stored in this dataset, I can now decide on the factor levels which will be as follows: 1980s, 1990s, 2000s, 2010s, 2020s. I will now convert this numeric variable into a categorical variable below!
+
+```{r}
+vancouver_trees_data_1980s <- vancouver_trees_data %>%
+  filter(1980<=year_planted, year_planted<1990) %>%
+  mutate(year = '1980s')
+
+vancouver_trees_data_1990s <- vancouver_trees_data %>%
+  filter(1990<=year_planted, year_planted<2000) %>%
+  mutate(year = '1990s')
+
+vancouver_trees_data_200s <- vancouver_trees_data %>%
+  filter(2000<=year_planted, year_planted<2010) %>%
+  mutate(year = '2000s')
+
+vancouver_trees_data_2010s <- vancouver_trees_data %>%
+  filter(2010<=year_planted, year_planted<2020) %>%
+  mutate(year = '2010s')
+
+vancouver_trees_data_2020s <- vancouver_trees_data %>%
+  filter(2020<=year_planted) %>%
+  mutate(year = '2020s')
+
+vancouver_trees<- bind_rows(vancouver_trees_data_1980s,vancouver_trees_data_1990s,vancouver_trees_data_2000s,vancouver_trees_data_2010s,vancouver_trees_data_2020s)
+
+print(vancouver_trees)
+```
 
 ##### *Exercise 3: Plot the distribution of a numeric variable*
-For this exercise, I intend to plot the distribution of the diameter (inches) of trees in Vancouver. I will to create a density plot which has 'Diameter of Tree at Breast Height (in)' on the x-axis and 'Density' on the y-axis. A blue dotted line will be used to the indicate the mean diameter of all trees in Vancouver.
+For this exercise, I intend to plot the distribution of the *height_range_id* of trees in Vancouver. I have created a histogram which has 'Height Range of Tree (x10 ft)' on the x-axis and 'Count' on the y-axis.
 ```{r}
-vancouver_trees_height_factor %>%
-  ggplot(mapping = aes(diameter)) +
-  geom_density(alpha=0.09, color="chartreuse4", fill = "chartreuse4") +
-  labs(x = "Diameter of Tree at Breast Height (in)", y = "Density") +
-  geom_vline(aes(xintercept=mean(diameter)), color="lightslateblue", linetype="dashed", size=0.5)
+vancouver_trees%>%
+  ggplot(mapping = aes(height_range_id)) +
+  geom_bar(alpha=0.7, color="chartreuse4", fill = "chartreuse4") +
+  labs(x = "Height Range of Tree (x10 ft)", y = "Count")
 ```
+
 ##### *Exercise 4: Make a new tibble with a subset of your data, with variables and observations that you are interested in exploring*
 I have created many modified versions of the vancouver_trees dataset in the previous three exercises. Now, I will create a new tibble, which will contain a subset of my data, more specifically the variables that I consider to be potentially relevant for my 4 research questions. Lastly, I will print the tibble to ensure that it has the correct number of columns and was subsetted correctly!
 ```{r}
-irrelevant_variables <- c("tree_id","civic_number","assigned","height_range_id","longitude","latitude")
+irrelevant_variables <- c("tree_id","civic_number","assigned","longitude","latitude")
 
 vancouver_trees_data <- vancouver_trees_height_factor %>%
   select(everything(),-irrelevant_variables)
@@ -246,7 +287,6 @@ vancouver_trees_data <- vancouver_trees_height_factor %>%
 print(vancouver_trees_data)
 ```
 <!----------------------------------------------------------------------------->
-
 # Task 3: Write your research questions (5 points)
 
 So far, you have chosen a dataset and gotten familiar with it through exploring the data. Now it's time to figure out 4 research questions that you would like to answer with your data! Write the 4 questions and any additional comments at the end of this deliverable. These questions are not necessarily set in stone - TAs will review them and give you feedback; therefore, you may choose to pursue them as they are for the rest of the project, or make modifications!
@@ -254,7 +294,14 @@ So far, you have chosen a dataset and gotten familiar with it through exploring 
 <!--- *****START HERE***** --->
 #### *My 4 Research Questions*
 My 4 potential research questions for the *vancouver_trees* dataset are as follows:
-1. 
+1. Since the beginning of data collection, in which decade were the most trees planted in Vancouver? Additionally, how many of these had root barriers installed?
+2. Which species of trees is the most common in Vancouver?
+3. Which tree species in Vancouver has the greatest 
+
+
+
+
+
 # Task 4: Process and summarize your data (13 points)
 
 From Task 2, you should have an idea of the basic structure of your dataset (e.g. number of rows and columns, class types, etc.). Here, we will start investigating your data more in-depth using various data manipulation functions.
@@ -282,6 +329,182 @@ Ensure that the output of each operation is printed!
 Make sure it's clear what research question you are doing each operation for!
 
 <!------------------------- Start your work below ----------------------------->
+#### *Processing and Summarizing Data*
+
+##### **Research Question # 1: What is the most common diameter for trees in Vancouver?**
+###### Summarizing Task 
+For this section, I have chosen summarizing task # 1, as described above. The numerical variable I will be using will be the *diameter* of the trees at breast height (in). I will be calculating its range, mean, standard deviation, and interquartile range for each genus of trees. 
+```{r}
+vancouver_trees_data %>%
+  group_by(genus_name) %>%
+  summarize(range_diameter = max(diameter)-min(diameter), mean_diameter = mean(diameter), sd_diameter = sd(diameter), IQR_diameter = IQR(diameter))
+```
+###### Graphing Task 
+For this task, I have plotted the distribution of the diameter (inches) of trees in Vancouver on a histogram with 'Diameter of Tree at Breast Height (in)' on the x-axis and 'Count' on the y-axis. This graph was created to satisfy the requirements of graphing task #8. As such, 3 histograms with different bin widths are shown below. For the first histogram, the bin width was set to be 100, followed by a bin width of 5 for the second histogram. The bin width of the last histogram was chosen using the Freedman-Diaconis rule, which advises on the optimal bin width for a given graph based on the interquartile range and the number of observations through an equation. In my opinion, the second histogram has the best bin width. This is because the bins aren't too big that all observations fall into one bin (this is the case with the first histogram), and the bins aren't too small either which would make it difficult to distinguish between the different bins (this is the case with the third histogram). Simply by looking at the second histogram, we can tell that most values for the diameter of trees in Vancouver fall between 5-20 inches.
+```{r}
+vancouver_trees_data %>%
+  ggplot(mapping = aes(diameter)) +
+  geom_histogram(binwidth = 100, color="chartreuse4", fill = "chartreuse4") +
+  labs(x = "Diameter of Tree at Breast Height (in)", y = "Count") +
+  theme_classic()
+```
+```{r}
+vancouver_trees_data %>%
+  ggplot(mapping = aes(diameter)) +
+  geom_histogram(binwidth=5, color="chartreuse4", fill = "chartreuse4") +
+  labs(x = "Diameter of Tree at Breast Height (in)", y = "Count") +
+  theme_classic()
+```
+```{r}
+optimal_bin_width <- ((IQR(vancouver_trees_data$diameter))*2)/(length(vancouver_trees_data$diameter)^(1/3))
+
+vancouver_trees_data %>%
+  ggplot(mapping = aes(diameter)) +
+  geom_histogram(binwidth=optimal_bin_width, color="chartreuse4", fill = "chartreuse4") +
+  labs(x = "Diameter of Tree at Breast Height (in)", y = "Count") +
+  theme_classic()
+```
+##### *Research Question # 1: Since the beginning of data collection, in which decade were the most trees planted in Vancouver? Additionally, how many of these had root barriers installed?*
+###### Summarizing Task 
+For this section of my data analysis, I have chosen summarizing task # 3, as described above. I will create a categorical variable (decade) from the existing numerical variable (date_planted).
+```{r}
+vancouver_trees_data$year_planted <- as.numeric(format(vancouver_trees_data$date_planted,'%Y'))
+
+```
+
+```{r}
+minimum_year <- min(vancouver_trees_data$year_planted, na.rm = TRUE)
+maximum_year <- max(vancouver_trees_data$year_planted, na.rm = TRUE)
+
+print(minimum_year)
+print(maximum_year)
+```
+After extracting the year from the date, and determining the minimum and maximum values for year stored in this dataset, I can now decide on the factor levels which will be as follows: 1980s, 1990s, 2000s, 2010s, 2020s. I will now convert this numeric variable into a categorical variable below!
+
+```{r}
+vancouver_trees_data_1980s <- vancouver_trees_data %>%
+  filter(1980<=year_planted, year_planted<1990) %>%
+  mutate(year = '1980s')
+
+vancouver_trees_data_1990s <- vancouver_trees_data %>%
+  filter(1990<=year_planted, year_planted<2000) %>%
+  mutate(year = '1990s')
+
+vancouver_trees_data_200s <- vancouver_trees_data %>%
+  filter(2000<=year_planted, year_planted<2010) %>%
+  mutate(year = '2000s')
+
+vancouver_trees_data_2010s <- vancouver_trees_data %>%
+  filter(2010<=year_planted, year_planted<2020) %>%
+  mutate(year = '2010s')
+
+vancouver_trees_data_2020s <- vancouver_trees_data %>%
+  filter(2020<=year_planted) %>%
+  mutate(year = '2020s')
+
+vancouver_trees_data <- bind_rows(vancouver_trees_data_1980s,vancouver_trees_data_1990s,vancouver_trees_data_2000s,vancouver_trees_data_2010s,vancouver_trees_data_2020s)
+
+print(vancouver_trees_data)
+```
+###### Graphing Task 
+For the graphing task for my first research question, I have chosen task # 5. I will create a bar plot with 'Year' on the x-axis and 'Count' on the y-axis, which will allow me to determine the year in which the most trees were planted in Vancouver.
+```{r}
+vancouver_trees_data %>%
+  ggplot() +
+  geom_bar(aes(x=year), color = "chartreuse4", fill = "darkseagreen1", width = 0.9, alpha =0.3) +
+  labs(x = "Year", y = "Number of Trees Planted in Vancouver") +
+  theme_linedraw() 
+```
+Based on the graph above, the greatest number of trees planted in Vancouver were planted in the 1990s.
+
+##### *Research Question # 2: Which genus of trees, if any, has the greatest diameter?*
+###### Summarizing Task
+For this section, I have chosen summarizing task # 1, as described above. The numerical variable I will be using will be the diameter of the trees at breast height (in). I will be calculating its range, mean, standard deviation, and interquartile range for each genus of trees. 
+```{r}
+vancouver_trees_data %>%
+  group_by(genus_name) %>%
+  summarize(range_diameter = max(diameter)-min(diameter), mean_diameter = mean(diameter), sd_diameter = sd(diameter), IQR_diameter = IQR(diameter))
+```
+###### Graphing Task
+For the graphing task for research question 2, I have chosen graphing task # 5. In order to determine which genus of trees has the greatest diameter, I will create a box plot, which will be overlaid with a jitter plot. The jitter plot will aid in determining whether there are any outliers that skew the results.
+```{r}
+vancouver_trees_data %>%
+  ggplot(aes(genus_name, diameter)) +
+  geom_jitter(color="darkgoldenrod4", size=0.05, alpha = 0.8) +
+  geom_boxplot(outlier.shape=NA) +
+  labs(x = "Genus Name", y = "Diameter of Tree at Breast Height (in)") +
+  scale_x_discrete(guide = guide_axis(angle = 90)) +
+  theme_linedraw()
+```
+##### **Research Question # 2: Which genus of trees in Vancouver has the greatest diameter?**
+###### **Summarizing Task:**
+For this research question, I have chosen summarizing task # 2. As per the instructions, I have computed the number of observations (rows) for the categorical variable *genus_name* below. I have sliced the dataset to keep only the top 5 most prevalent genera in Vancouver. The reasoning for this will become apparent in the corresponding graphing task.
+```{r}
+vancouver_trees_data_top10 <- vancouver_trees_data %>%
+  group_by(genus_name) %>%
+  summarise(n=n()) %>%
+  arrange(desc(n)) %>%
+  slice(1:5)
+
+print(vancouver_trees_data_top10)
+```
+###### Graphing Task:
+I will be completing graphing task # 7, which requires the use of alpha transparency. Below, I have created a density plot which shows the distribution of the numeric variable *diameter* according to *genus_name*. Given that this dataset has a wide array of genera, I will be looking only at the top 5 genera of trees that are most prevalent in Vancouver. Additionally, based on previous analyses, I know that the range of *diameter* is quite long. Due to this, I will limit the range of my x-axis to 0-50 feet.
+```{r}
+vancouver_trees_data %>%
+  filter(genus_name %in% vancouver_trees_data_top10$genus_name) %>%
+  ggplot(mapping = aes(x = diameter, group = genus_name, fill = genus_name)) +
+  geom_density(alpha=0.5) +
+  labs(x = "Diameter of Tree at Breast Height (in)", y = "Density") +
+  xlim(0,50) +
+  theme_linedraw()
+```
+
+
+##### *Research Question # 3: Is there a linear relationship between the height and diameter of trees?*
+###### Summarizing Task
+For this question, I have chosen summarizing task # 1, as described above. Previously, I have calculated the range, mean, interquartile range, and standard deviation of the diameter of trees belonging to a given genus. However, I have not calculated this statistical information for the height these trees. Below, I will calculate the mean and range for height, alongside the standard deviation and interquartile range, in order to be able to adequately compare height and diameter in answering my research question.
+```{r}
+vancouver_trees %>%
+  group_by(genus_name) %>%
+  summarize(range_height_range_id = max(height_range_id)-min(height_range_id), mean_height_range_id = mean(height_range_id), sd_height_range_id = sd(height_range_id), IQR_height_range_id = IQR(height_range_id))
+```
+###### Graphing Task
+For the graphing task for research question # 3, I will be completing task # 5. In this task, I will be 
+```{r}
+ggplot(vancouver_trees, aes(x=diameter, y=height_range_id)) +
+geom_point(size = 0.009, color="black") +
+  geom_smooth(linetype="dashed", color="goldenrod3") +
+  labs(x = "Diameter of Tree at Breast Height (in)", y = "Height Range (0-10)")+
+  theme_linedraw()
+```
+##### *Research Question # 4: Are decisions to plant a specific genus of a tree dependent on whether or not it typically requires a root barrier?*
+###### Summarizing Task
+For this research question, I will take a look at root barriers. Root barriers are physical barriers that redirect roots away from hardscapes without harming the tree, while also preventing expensive damage due to its roots. I hypothesize that the genus of trees requiring root barriers will be negatively correlated to the frequency of this genus. I suspect that the risk of damage is higher with these genera, which decreases the likelihood that the city will plant these trees.
+
+To this end, I will be completing summarizing task # 2 for this question. The two categorical variables I will be using are *genus_name* and *root_barrier*. I will begin by computing the number of observations (rows) for the *genus_name* variable.
+```{r}
+vancouver_trees_genus <- vancouver_trees_data %>%
+  group_by(genus_name) %>%
+  summarize(n= n()) %>%
+print(vancouver_trees_genus)
+```
+In order to answer my research question, I also need to calculate the percentage of trees in each genus which have a root barrier. This is done below!
+```{r}
+vancouver_trees_barrier <- vancouver_trees_data %>%
+  group_by(genus_name) %>%
+  filter(root_barrier=="Y") %>%
+  summarize(n=n()) %>%
+  ungroup()
+print(vancouver_trees_barrier)
+```
+In order to determine the proportion of trees belonging to each genera that have a root barrier, I will be combining the two datasets from above.
+```{r}
+vancouver_trees_frequency <- right_join(vancouver_trees_barrier,vancouver_trees_genus)
+print(vancouver_trees_frequency)
+```
+
+###### Graphing Task
 
 <!----------------------------------------------------------------------------->
 
