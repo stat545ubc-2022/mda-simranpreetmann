@@ -150,7 +150,31 @@ For this exercise, you'll be choosing two of the three tasks below -- both tasks
 But first, tasks 1 and 2 below ask you to modify a plot you made in a previous milestone. The plot you choose should involve plotting across at least three groups (whether by facetting, or using an aesthetic like colour). Place this plot below (you're allowed to modify the plot if you'd like). If you don't have such a plot, you'll need to make one. Place the code for your plot below.
 
 <!-------------------------- Start your work below ---------------------------->
+```{r}
+vancouver_trees_height <- vancouver_trees %>%
+  mutate(height_range_id = factor(case_when(height_range_id == 0 ~ "0-10",
+                                            height_range_id == 1 ~ "10-20",
+                                            height_range_id == 2 ~ "20-30",
+                                            height_range_id == 3 ~ "30-40",
+                                            height_range_id == 4 ~ "40-50",
+                                            height_range_id == 5 ~ "50-60",
+                                            height_range_id == 6 ~ "60-70",
+                                            height_range_id == 7 ~ "70-80",
+                                            height_range_id == 8 ~ "80-90",
+                                            height_range_id == 9 ~ "90-100",
+                                            height_range_id == 10 ~ "100+")))
 
+vancouver_trees_height%>%
+  ggplot(aes(fill = neighbourhood_name, x = height_range_id)) +
+  geom_bar(position = "stack", alpha=0.5) +
+  labs(x = "Height Range of Tree (ft)", y = "Number of Trees", fill = "Neighbourhood Name") +
+  scale_x_discrete(guide = guide_axis(angle = 90)) +
+  theme(axis.text.x = element_text(size=6), legend.title = element_text(size = 8), legend.text = element_text (size = 4), legend.key.size = unit(0.25, "cm"), legend.key.width = unit(0.25, "cm"))
+```
+
+The plot I have chosen, and pasted above, is a modified version of the plot I created for Exercise 2 of Task 2 in Milestone 1 of this project. The purpose of the plot shown above is to determine which height range is the most common for trees in Vancouver, while also seeing whether certain height ranges are concentrated in specific neighborhoods of Vancouver. 
+
+I absolutely love driving in neighborhoods where the trees from both sides of the road meet to form a sort of canopy at the top. The information presented in this graph would be useful in determining which neighborhoods this is most likely to occur in. To get this information, I would look at the very large height ranges and see which neighborhoods these tree heights are predominant in.
 <!----------------------------------------------------------------------------->
 
 Now, choose two of the following tasks.
@@ -172,14 +196,49 @@ Now, choose two of the following tasks.
 
 <!-------------------------- Start your work below ---------------------------->
 
-**Task Number**: FILL_THIS_IN
+**Task Number 1**: Produce a new plot that reorders a factor in your original plot, using the `forcats` package.
+```{r}
+vancouver_trees_height <- vancouver_trees_height %>%
+  mutate(height_range_id = fct_relevel(height_range_id, "100+", after = 10))
 
+vancouver_trees_height_levels <- levels(vancouver_trees_height$height_range_id)
+print(vancouver_trees_height_levels)
+```
+
+```{r}
+vancouver_trees_height%>%
+  ggplot(aes(fill = neighbourhood_name, x = height_range_id)) +
+  geom_bar(position = "stack", alpha=0.5) +
+  labs(x = "Height Range of Tree (ft)", y = "Number of Trees", fill = "Neighbourhood Name") +
+  scale_x_discrete(guide = guide_axis(angle = 90)) +
+  theme(axis.text.x = element_text(size=6), legend.title = element_text(size = 8), legend.text = element_text (size = 4), legend.key.size = unit(0.25, "cm"), legend.key.width = unit(0.25, "cm"))
+```
+
+The graph I chose for this task plots the different categories of **height_range_id** on the x-axis. However, as can be seen from the initial graph, the order of this factor is not intuitive. The graph shows, from left to right, "0-10", "10-20", "100+", "20-30", "30-40", "40-50", "50-60", "60-70", "70-80", "80-90", "90-100". The levels in this factor represent the different categories that a tree can be placed into depending on its height. Although this variable is a categorical variable, the numbers have an inherent meaning to them. When looking at a graph, we expect the numbers, if there are any, to increase from left to right, regardless of whether they've been coded as integers or factors. This makes it easier to conclude which height range is the most common, as well as view the normal distribution of tree heights. As a result, the levels of this factor must be reordered to place "100+" at the end. The final order of the levels of this factor is as follows: "0-10", "10-20", "20-30", "30-40", "40-50", "50-60", "60-70", "70-80", "80-90", "90-100", "100+". Unlike the previous order, this order shows a intuitive, natural increase in the values represented by this factor.
 <!----------------------------------------------------------------------------->
 
 <!-------------------------- Start your work below ---------------------------->
 
-**Task Number**: FILL_THIS_IN
+**Task Number 2**: Produce a new plot that groups some factor levels together into an "other" category (or something similar), using the `forcats` package
 
+The plot produced in Task Number 1 of this section shows the number of trees in Vancouver that fall in the shown height ranges, as well as the neighborhoods in which each height range is the most prominent. From the graph, it is relatively easy to conclude that most trees in Vancouver are between 20 and 30 feet high. There are approximately 5000 trees that are 60-70 feet high! If I, for example, wanted to go have a picnic under a tree that was 60-70 feet high, I would first need to determine which neighborhood has the greatest number of 60-70 feet high trees in Vancouver. The graph shown above, however, isn't very clear in showing this information. Instead of showing discrete stacked plots, it shows a rainbow gradient due to the large number of neighborhoods in Vancouver.
+
+In order to make this graph easier to read, I will keep the 10 neighborhoods in Vancouver which have the greatest number of trees as discrete levels, while lumping all other neighborhoods into the "Other" category.
+```{r}
+vancouver_trees_height <- vancouver_trees_height %>%
+  mutate(neighbourhood_name  = fct_infreq(neighbourhood_name)) %>%
+  mutate(neighbourhood_name = fct_lump_n(neighbourhood_name, 5, other_level = "Other")) %>%
+  mutate(neighbourhood_name = fct_relevel(neighbourhood_name, "Other", after = 5))
+
+vancouver_trees_height%>%
+  ggplot(aes(fill = neighbourhood_name, x = height_range_id)) +
+  geom_bar(position = "stack", alpha=0.5) +
+  labs(x = "Height Range of Tree (ft)", y = "Number of Trees", fill = "Neighbourhood Name") +
+  scale_x_discrete(guide = guide_axis(angle = 90)) +
+  theme(axis.text.x = element_text(size=6), legend.title = element_text(size = 8), legend.text = element_text (size = 4), legend.key.size = unit(0.25, "cm"), legend.key.width = unit(0.25, "cm"))
+```
+
+From the graph above, I can, now, easily deduce that if I want to have the greatest chance of finding a 60-70 foot tree to have a picnic under, I should head to the Dunbar-Southlands neighborhood. This is one of top 5 neighborhoods in Vancouver with the greatest number of trees, and it also takes up the greatest proportion of the bar labelled "60-70", aside from the "Other" group of trees.
 <!----------------------------------------------------------------------------->
 
 # Task 3: Modelling
