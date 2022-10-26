@@ -379,6 +379,9 @@ Take a summary table that you made from Milestone 1 (Task 4.2), and write it as 
 -   **Reproducibility criteria**: You should be able to delete the csv file, and remake it simply by knitting this Rmd file.
 
 <!-------------------------- Start your work below ---------------------------->
+```{r}
+write_csv(cancer_sample, here::here("output", "cancer_samples.csv"))
+```
 
 <!----------------------------------------------------------------------------->
 
