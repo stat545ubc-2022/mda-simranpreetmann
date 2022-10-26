@@ -126,8 +126,11 @@ Now, you should be more familiar with your data, and also have made progress in 
 
 <!-------------------------- Start your work below ---------------------------->
 
-1.  *FILL_THIS_IN*
-2.  *FILL_THIS_IN*
+1.  **Which genus of trees, among the top 5 genera in Vancouver, has the greatest diameter on average?**
+      
+      *<span style ="color: red;">Please Note: Research question # 1 is equivalent to Research question # 2 from milestone 1 of this project; however, some details have been added to the question to make it more specific</span>*
+      
+2.  **Which neighborhood in Vancouver has the greatest biodiversity?**
 
 <!----------------------------------------------------------------------------->
 
@@ -140,19 +143,20 @@ Explain your decision for choosing the above two research questions.
 Now, try to choose a version of your data that you think will be appropriate to answer these 2 questions. Use between 4 and 8 functions that we've covered so far (i.e. by filtering, cleaning, tidy'ing, dropping irrelevant columns, etc.).
 
 <!--------------------------- Start your work below --------------------------->
-1. make height_range_id into a factor
-2. 
-<!----------------------------------------------------------------------------->
+**Function # 1: Drop Irrelevant Columns**
 
-# Task 2: Special Data Types (10)
-
-For this exercise, you'll be choosing two of the three tasks below -- both tasks that you choose are worth 5 points each.
-
-But first, tasks 1 and 2 below ask you to modify a plot you made in a previous milestone. The plot you choose should involve plotting across at least three groups (whether by facetting, or using an aesthetic like colour). Place this plot below (you're allowed to modify the plot if you'd like). If you don't have such a plot, you'll need to make one. Place the code for your plot below.
-
-<!-------------------------- Start your work below ---------------------------->
+For this function, I will drop all columns that are not important in my data analysis moving forward.
 ```{r}
-vancouver_trees_height <- vancouver_trees %>%
+vancouver_trees<- vancouver_trees %>%
+  select(tree_id, genus_name, species_name, neighbourhood_name, height_range_id, diameter, date_planted)
+
+print(vancouver_trees)
+```
+
+**Function # 2: Make Height Range ID Column Into A Factor**
+
+```{r}
+vancouver_trees<- vancouver_trees %>%
   mutate(height_range_id = factor(case_when(height_range_id == 0 ~ "0-10",
                                             height_range_id == 1 ~ "10-20",
                                             height_range_id == 2 ~ "20-30",
@@ -165,7 +169,48 @@ vancouver_trees_height <- vancouver_trees %>%
                                             height_range_id == 9 ~ "90-100",
                                             height_range_id == 10 ~ "100+")))
 
-vancouver_trees_height%>%
+print(vancouver_trees)
+```
+
+**Function # 3: Delete all rows without a Genus Name AND Diameter**
+
+```{r}
+vancouver_trees <- vancouver_trees %>%
+  drop_na(genus_name, diameter)
+
+print(vancouver_trees)
+```
+
+**Function # 4: Change Genus Name and Neighbourhood Name to a Factor**
+
+```{r}
+vancouver_trees <- vancouver_trees %>%
+  mutate(genus_name = factor(genus_name)) %>%
+  mutate(neighbourhood_name = factor(neighbourhood_name))
+
+print(vancouver_trees)
+```
+
+**Function # 5: Arrange the rows first by alphabetical order of genus_name, then by alphabetical order of neighbourhood name, and lastly by decreasing diameter**
+
+```{r}
+vancouver_trees <- vancouver_trees %>%
+  arrange(genus_name, neighbourhood_name, desc(diameter))
+
+print(vancouver_trees)
+```
+
+<!----------------------------------------------------------------------------->
+
+# Task 2: Special Data Types (10)
+
+For this exercise, you'll be choosing two of the three tasks below -- both tasks that you choose are worth 5 points each.
+
+But first, tasks 1 and 2 below ask you to modify a plot you made in a previous milestone. The plot you choose should involve plotting across at least three groups (whether by facetting, or using an aesthetic like colour). Place this plot below (you're allowed to modify the plot if you'd like). If you don't have such a plot, you'll need to make one. Place the code for your plot below.
+
+<!-------------------------- Start your work below ---------------------------->
+```{r}
+vancouver_trees%>%
   ggplot(aes(fill = neighbourhood_name, x = height_range_id)) +
   geom_bar(position = "stack", alpha=0.5) +
   labs(x = "Height Range of Tree (ft)", y = "Number of Trees", fill = "Neighbourhood Name") +
@@ -199,15 +244,15 @@ Now, choose two of the following tasks.
 
 **Task Number 1**: Produce a new plot that reorders a factor in your original plot, using the `forcats` package.
 ```{r}
-vancouver_trees_height <- vancouver_trees_height %>%
+vancouver_trees <- vancouver_trees %>%
   mutate(height_range_id = fct_relevel(height_range_id, "100+", after = 10))
 
-vancouver_trees_height_levels <- levels(vancouver_trees_height$height_range_id)
+vancouver_trees_height_levels <- levels(vancouver_trees$height_range_id)
 print(vancouver_trees_height_levels)
 ```
 
 ```{r}
-vancouver_trees_height%>%
+vancouver_trees%>%
   ggplot(aes(fill = neighbourhood_name, x = height_range_id)) +
   geom_bar(position = "stack", alpha=0.5) +
   labs(x = "Height Range of Tree (ft)", y = "Number of Trees", fill = "Neighbourhood Name") +
@@ -226,12 +271,12 @@ The plot produced in Task Number 1 of this section shows the number of trees in 
 
 In order to make this graph easier to read, I will keep the 10 neighborhoods in Vancouver which have the greatest number of trees as discrete levels, while lumping all other neighborhoods into the "Other" category.
 ```{r}
-vancouver_trees_height <- vancouver_trees_height %>%
+vancouver_trees <- vancouver_trees %>%
   mutate(neighbourhood_name  = fct_infreq(neighbourhood_name)) %>%
   mutate(neighbourhood_name = fct_lump_n(neighbourhood_name, 5, other_level = "Other")) %>%
   mutate(neighbourhood_name = fct_relevel(neighbourhood_name, "Other", after = 5))
 
-vancouver_trees_height%>%
+vancouver_trees%>%
   ggplot(aes(fill = neighbourhood_name, x = height_range_id)) +
   geom_bar(position = "stack", alpha=0.5) +
   labs(x = "Height Range of Tree (ft)", y = "Number of Trees", fill = "Neighbourhood Name") +
@@ -250,7 +295,7 @@ Pick a research question, and pick a variable of interest (we'll call it "Y") th
 
 <!-------------------------- Start your work below ---------------------------->
 
-**Research Question**: Which genus of trees in Vancouver has the greatest diameter on average?
+**Research Question**: Which genus of trees, among the top 5 genera in Vancouver, has the greatest diameter on average?
 
 **Variable of interest**: diameter
 
@@ -270,7 +315,16 @@ Fit a model or run a hypothesis test that provides insight on this variable with
 For the research question stated above, my null hypothesis is the following: there is no difference in the average diameter of trees in Vancouver between different genera. In the previous milestone, I had plotted the "Diameter of Tree at Breast Height (ft)" on the x-axis and the "Density" on the y-axis of a density plot. From this, we could see that diameter followed a normal distribution. As such, I will first perform a multiple group comparison test known as a one-way analysis of variance (ANOVA) to see if there is a statistically significant difference between the groups.
 
 ```{r}
-res_aov <- aov(diameter ~ genus_name, vancouver_trees)
+vancouver_trees_top5 <- vancouver_trees %>%
+  group_by(genus_name) %>%
+  summarise(n=n()) %>%
+  arrange(desc(n)) %>%
+  slice(1:5)
+
+vancouver_trees_top5genera <- vancouver_trees %>%
+  filter(genus_name %in% vancouver_trees_top5$genus_name)
+
+res_aov <- aov(diameter ~ genus_name, vancouver_trees_top5genera)
 
 print(res_aov)
 ```
@@ -292,9 +346,25 @@ To determine whether there is a statistically significant difference in diameter
 broom::tidy(res_aov)
 ```
 
-If we take a look at the *p.value* column in the tibble above, the p-value associated with this test is 0, which according to the 0.05 cut-off, is not considered statistically significant. According to this, we can conclude that, based on this current data set we are unable to reject the null hypothesis, and, therefore, the average diameter of trees belonging to different genera in Vancouver are ***not significantly different***. 
+If we take a look at the *p.value* column in the tibble above, the p-value associated with this test is 0. in this test, 0 represents a value of 0.0001, which according to the 0.05 cut-off, is considered statistically significant. According to this, we can conclude that, based on this current data set we are able to reject the null hypothesis, and, therefore, the average diameter of trees belonging to different genera in Vancouver are ***significantly different***. 
 
-Had I gotten a statistically significant difference from the hypothesis test above, I would have moved forward with a post-hoc test to determine which groups are different and to see if one particular genera has a significantly greater diameter, on average, than others. However, since this was not the case, I will end my analysis here for this research question.
+Now that I gotten a statistically significant difference from the hypothesis test above, I will be performing a post-hoc test (Tukey's Test) to determine which groups are different and to see if one particular genera has a significantly greater diameter, on average, than others. This test is not done as part of a particular task, however, I would like to finish answering my question, so I am including this extra section!
+
+```{r}
+res_tukey <- TukeyHSD(res_aov)
+
+broom::tidy(res_tukey)
+```
+
+```{r}
+vancouver_trees_top5genera %>%
+  group_by(genus_name) %>%
+  summarize(average_diameter = mean(diameter)) %>%
+  ggplot(mapping = aes(x = genus_name, y = average_diameter)) +
+  geom_col(col = "steelblue1", fill = "steelblue1", alpha = 0.5) +
+  labs(x = "Name of Genus", y = "Average Diameter of Tree at Breast Height (ft)")
+```
+According to the graph shown above, the genus *Quercus* has the greatest average diameter of trees at breast height, amongst the 5 most prevalent genera in Vancouver. Based on the Tukey's test performed earlier, we can see that Querus trees have a significantly larger diameter than Acer (p = 0.000000e+00), Fraxinus (p = 0.000000e+00), Prunus (p = 1.776357e-14), Tilia (p = 0.000000e+00). As we can see, the p-values obtained here are extremely small indicating high statistical significance that I can only hope to achieve in my thesis project results!
 <!----------------------------------------------------------------------------->
 
 # Task 4: Reading and writing data
