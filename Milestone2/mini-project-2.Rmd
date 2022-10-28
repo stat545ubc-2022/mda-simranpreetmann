@@ -6,7 +6,6 @@ output: github_document
 ```{r include = FALSE}
 knitr::opts_chunk$set(error = TRUE)
 ```
-
 *To complete this milestone, you can edit [this `.rmd` file](https://raw.githubusercontent.com/UBC-STAT/stat545.stat.ubc.ca/master/content/mini-project/mini-project-2.Rmd) directly. Fill in the sections that are commented out with `<!--- start your work here--->`. When you are done, make sure to knit to an `.md` file by changing the output in the YAML header to `github_document`, before submitting a tagged release on canvas.*
 
 # Welcome to your second (and last) milestone in your mini data analysis project!
@@ -65,7 +64,7 @@ A reminder of the definition of *tidy* data:
 Based on the definition above, can you identify if your data is tidy or untidy? Go through all your columns, or if you have \>8 variables, just pick 8, and explain whether the data is untidy or tidy.
 
 <!--------------------------- Start your work below --------------------------->
-The data I am using, and have used to complete Milestone 1 of this project, is *vancouver_trees*. This data has 20 columns, thus I will focus on the following 8 columns to answer this question: tree_id, genus_name, species_name, root_barrier, neighbourhood_name, height_range_id, diameter, date_planted. I have chosen to include the tree_id column because it has a unique value for every row and can, thus, act as an identifier variable if I need to join tibbles in future tasks. I have chosen the other 7 variables because I have either already used them in my analyses for Milestone 1 or I had thought of questions that could be answered using those variables. Although I didn't necessarily include these questions in Milestone 1, I am keeping these variables, particularly *root_barrier* and *genus_name*, in case I explore these questions further in Milestone 2 of this project.
+The data I am using, and have used to complete Milestone 1 of this project, is vancouver_trees. This data has 20 columns, thus I will focus on the following 8 columns to answer this question: tree_id, genus_name, species_name, root_barrier, neighbourhood_name, height_range_id, diameter, date_planted. I have chosen to include the tree_id column because it has a unique value for every row and can, thus, act as an identifier variable if I need to join tibbles in future tasks. I have chosen the other 7 variables because I have either already used them in my analyses for Milestone 1 or I had thought of questions that could be answered using those variables. Although I didn't necessarily include these questions in Milestone 1, I am keeping these variables, particularly *root_barrier* and *genus_name*, in case I explore these questions further in Milestone 2 of this project.
 
 Based on the 8 variables listed previously, this data set is tidy due to the fact that each row corresponds to an observation, each column corresponds to a variable and each cell represents a value. 
 

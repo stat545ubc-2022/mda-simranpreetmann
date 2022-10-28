@@ -353,7 +353,7 @@ vancouver_trees %>%
   summarize(range_height_range_id = max(height_range_id)-min(height_range_id), mean_height_range_id = mean(height_range_id), sd_height_range_id = sd(height_range_id), IQR_height_range_id = IQR(height_range_id))
 ```
 #### **<span style ="color: orange;">Graphing Task</span>**
-For the graphing task for research question # 3, I will be completing task # 5. In this task, I will be 
+For the graphing task for research question # 3, I will be completing task # 5.
 ```{r}
 ggplot(vancouver_trees, aes(x=diameter, y=height_range_id)) +
 geom_point(size = 0.009, color="black") +
