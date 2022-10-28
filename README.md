@@ -9,5 +9,5 @@ This project is mainly about using ggplot2 and dplyr to conduct data analysis on
 ### What is in this repopsitory?
 This repository contains the following folders:
 - [README.md]() - Brief discription of this project and repository
-- [https://github.com/stat545ubc-2022/mda-simranpreetmann/blob/main/mini-project-1.Rmd](https://github.com/stat545ubc-2022/mda-simranpreetmann/tree/main/Milestone1) - R markdown folder containing the figures, md and Rmd files for Milestone 1.
-- [mini-project-1.md](https://github.com/stat545ubc-2022/mda-simranpreetmann/blob/main/mini-project-1.md)](https://github.com/stat545ubc-2022/mda-simranpreetmann/tree/main/Milestone2) - R markdown folder containing the figures, md and Rmd files for Milestone 2.
+- [Milestone 1](https://github.com/stat545ubc-2022/mda-simranpreetmann/tree/main/Milestone1) - R markdown folder containing the figures, md and Rmd files for Milestone 1.
+- [Milestone 2](https://github.com/stat545ubc-2022/mda-simranpreetmann/tree/main/Milestone2) - R markdown folder containing the figures, md and Rmd files for Milestone 2.
