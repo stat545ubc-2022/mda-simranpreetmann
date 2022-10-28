@@ -7,7 +7,7 @@ This is the mini data analysis project for UBC STAT 545A done by Simranpreet Man
 This project is mainly about using ggplot2 and dplyr to conduct data analysis on a give dataset in order to answer 4 research questions about that that particular dataset. It focuses on the skills of data manipulation.
   
 ### What is in this repopsitory?
-This repository contains the following files:
+This repository contains the following folders:
 - [README.md]() - Brief discription of this project and repository
-- [mini-project-1.Rmd](https://github.com/stat545ubc-2022/mda-simranpreetmann/blob/main/mini-project-1.Rmd) - R markdown file containing answers for Tasks 1-4
-- [mini-project-1.md](https://github.com/stat545ubc-2022/mda-simranpreetmann/blob/main/mini-project-1.md) - Rendered markdown document for milestone 1 of this project
+- [https://github.com/stat545ubc-2022/mda-simranpreetmann/blob/main/mini-project-1.Rmd](https://github.com/stat545ubc-2022/mda-simranpreetmann/tree/main/Milestone1) - R markdown folder containing the figures, md and Rmd files for Milestone 1.
+- [mini-project-1.md](https://github.com/stat545ubc-2022/mda-simranpreetmann/blob/main/mini-project-1.md)](https://github.com/stat545ubc-2022/mda-simranpreetmann/tree/main/Milestone2) - R markdown folder containing the figures, md and Rmd files for Milestone 2.
